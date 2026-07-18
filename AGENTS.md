@@ -197,25 +197,19 @@ Hackathon priorities:
 4. Clean architecture
 5. Scalability
 
-# Build Week Scope
+# Build Week Priorities
 
-Highest Priority
-
+Priority 1
 - Tama OS Shell
 - Snapshot Adapter
 - Decision Engine
 - Today's Brief
 - GPT-5.6 Copilot
 
-If time remains:
-
-- Demo Data
-
-Do NOT implement unless explicitly requested:
-
+Not in this hackathon
 - Recommendation Journal
-- Multi-agent
+- Complex simulations
 - Backend
 - Authentication
-- Cloud Sync
-- Scenario Simulation
+- Cloud sync
+- Multi-agent systems
