@@ -364,6 +364,58 @@
       font-weight: 850;
     }
 
+    .brief-output {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .brief-item {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .brief-item .k {
+      margin: 0 0 6px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .brief-item .v {
+      margin: 0;
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 850;
+      letter-spacing: -0.02em;
+      line-height: 1.35;
+    }
+
+    .brief-item .d {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .risk-list {
+      display: grid;
+      gap: 8px;
+      margin: 8px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .risk-list li {
+      color: var(--soft);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
     section { scroll-margin-top: 105px; }
 
     .section-head {
@@ -641,10 +693,29 @@
             </div>
 
             <div class="placeholder-box">
-              <strong>Read-only snapshot adapter is active.</strong>
+              <strong>Today’s Brief is powered by deterministic rules.</strong>
               <p>
-                Tama OS now checks whether Finance and Research data exist without writing back, renaming keys, or merging application state.
+                The brief uses the read-only snapshot only. It does not calculate portfolio values, call AI, or write back to Finance or Research.
               </p>
+              <div class="brief-output" aria-live="polite">
+                <div class="brief-item">
+                  <p class="k">Financial Health</p>
+                  <p class="v" id="brief-health">Checking…</p>
+                </div>
+                <div class="brief-item">
+                  <p class="k">Top Priority</p>
+                  <p class="v" id="brief-priority">Checking…</p>
+                  <p class="d" id="brief-priority-detail"></p>
+                </div>
+                <div class="brief-item">
+                  <p class="k">Key Risks</p>
+                  <ul class="risk-list" id="brief-risks"><li>Checking…</li></ul>
+                </div>
+                <div class="brief-item">
+                  <p class="k">Recommended Next Action</p>
+                  <p class="v" id="brief-action">Checking…</p>
+                </div>
+              </div>
               <div class="snapshot-status" aria-live="polite">
                 <div class="snapshot-row"><span>Finance data</span><span id="snapshot-finance-status">Checking…</span></div>
                 <div class="snapshot-row"><span>Research data</span><span id="snapshot-research-status">Checking…</span></div>
@@ -657,7 +728,7 @@
           <div class="signal-list" aria-label="Milestone 2 status">
             <div class="signal"><span class="signal-dot"></span> Read-only LocalStorage access only.</div>
             <div class="signal"><span class="signal-dot blue"></span> Finance and Research remain standalone.</div>
-            <div class="signal"><span class="signal-dot purple"></span> No calculations, recommendations, or AI yet.</div>
+            <div class="signal"><span class="signal-dot purple"></span> No AI, APIs, or storage writes.</div>
           </div>
         </aside>
       </section>
@@ -707,7 +778,7 @@
             <h2 id="placeholder-title">Dashboard shell, ready for intelligence.</h2>
           </div>
           <p>
-            Milestone 2 adds a read-only snapshot adapter only. Decision engine calculations, recommendations, shared writes, and AI reasoning remain deferred until approval.
+            Milestone 3 adds a small deterministic decision engine only. Shared writes, AI reasoning, and future dashboard expansion remain deferred until approval.
           </p>
         </div>
 
@@ -720,8 +791,8 @@
 
           <article class="panel-card">
             <h3>Decision Queue</h3>
-            <p>Reserved for deterministic recommendations such as review, invest, hold, fund, or update.</p>
-            <div class="metric"><strong>0</strong><span>Actions generated</span></div>
+            <p>Shows the current top deterministic priority from Today’s Brief.</p>
+            <div class="metric"><strong id="priority-count">—</strong><span>Top priority active</span></div>
           </article>
 
           <article class="panel-card">
@@ -766,13 +837,14 @@
     </main>
 
     <footer class="footer">
-      <span>Tama OS Milestone 2 — read-only snapshot adapter.</span>
+      <span>Tama OS Milestone 3 — deterministic Today’s Brief.</span>
       <span>No backend · No framework · No storage writes · No state merge</span>
     </footer>
   </div>
 
   <script src="js/storage.js"></script>
   <script src="js/state.js"></script>
+  <script src="js/decision-engine.js"></script>
   <script>
     (function () {
       'use strict';
@@ -818,14 +890,41 @@
         return String(counts.entries + counts.universe + counts.journal_import);
       }
 
+      function renderRisks(risks) {
+        const list = document.getElementById('brief-risks');
+        if (!list) return;
+
+        const visibleRisks = risks && risks.length ? risks.slice(0, 3) : [];
+        if (!visibleRisks.length) {
+          list.innerHTML = '<li>No immediate deterministic risks found.</li>';
+          return;
+        }
+
+        list.innerHTML = visibleRisks
+          .map((risk) => `<li><strong>${risk.title}</strong> — ${risk.detail}</li>`)
+          .join('');
+      }
+
+      function renderTodayBrief(brief) {
+        setText('brief-health', `${brief.financial_health.label} · ${brief.financial_health.score}/100`);
+        setText('brief-priority', brief.top_priority.title);
+        setText('brief-priority-detail', brief.top_priority.why);
+        setText('brief-action', brief.recommended_next_action);
+        setText('priority-count', brief.top_priority ? '1' : '0');
+        renderRisks(brief.key_risks);
+      }
+
       function renderSnapshotStatus() {
         const snapshot = window.TamaState.buildSnapshot(window.localStorage);
+        const brief = window.TamaDecisionEngine.analyze(snapshot);
+
         setText('snapshot-finance-status', formatStatus(snapshot.finance));
         setText('snapshot-research-status', formatStatus(snapshot.research));
         setText('snapshot-updated', formatDate(snapshot.last_updated));
         setText('snapshot-version', snapshot.version);
         setText('finance-record-count', totalFinanceRecords(snapshot.finance.summary));
         setText('research-record-count', totalResearchRecords(snapshot.research.summary));
+        renderTodayBrief(brief);
       }
 
       document.addEventListener('DOMContentLoaded', renderSnapshotStatus);
