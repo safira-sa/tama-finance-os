@@ -23,6 +23,13 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 .topbar-r{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .os-link{display:inline-flex;align-items:center;justify-content:center;min-height:28px;padding:5px 10px;border:1px solid var(--bm);border-radius:999px;background:var(--surf2);color:var(--t2);font-size:11px;font-weight:600;text-decoration:none;white-space:nowrap;transition:all .15s}
 .os-link:hover,.os-link:focus-visible{background:var(--surf3);color:var(--t);border-color:var(--bs);outline:none}
+.decision-loop{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.decision-loop-copy{max-width:720px;line-height:1.55}
+.decision-loop-copy strong{display:block;margin-bottom:2px;color:var(--t);font-size:12px}
+.decision-loop-actions{display:flex;gap:8px;flex-wrap:wrap}
+.decision-loop-actions a{display:inline-flex;align-items:center;min-height:30px;padding:5px 10px;border:1px solid currentColor;border-radius:999px;color:inherit;font-size:11px;font-weight:700;text-decoration:none;white-space:nowrap}
+.decision-loop-actions a:hover,.decision-loop-actions a:focus-visible{background:rgba(255,255,255,.08);outline:none}
+
 
 .btn{padding:6px 12px;border-radius:var(--rxs);font-size:12px;font-family:var(--sans);font-weight:500;cursor:pointer;transition:all .15s;border:1px solid var(--bm);background:var(--surf2);color:var(--t2)}
 .btn:hover{background:var(--surf3);color:var(--t);border-color:var(--bs)}
@@ -650,7 +657,10 @@ canvas{
 <div class="panel active" id="panel-overview">
   <div class="page-title">Overview</div>
   <div class="page-sub" id="ov-date">—</div>
-  <div class="alert a-pur">Decision loop: keep thesis quality here, then open <a href="tama-os.html" style="color:inherit;font-weight:700">Today’s Brief</a> to check whether Finance positions are decision-ready. Use <a href="tama-finance.html" style="color:inherit;font-weight:700">Finance OS</a> for cash, accounts, and actual holdings.</div>
+  <div class="alert a-pur decision-loop" aria-label="Research decision-loop guidance">
+    <div class="decision-loop-copy"><strong>Decision loop</strong>Keep thesis quality here. Then review Today’s Brief to check whether Finance positions are decision-ready, or update actual cash and holdings in Finance OS.</div>
+    <div class="decision-loop-actions" aria-label="Research decision-loop actions"><a href="tama-os.html">Review Today’s Brief</a><a href="tama-finance.html">Update Finance data</a></div>
+  </div>
   <div class="g4 mb">
     <div class="met"><div class="ml">Watchlist active</div><div class="mv c-pur" id="ov-active">0</div><div class="ms">research entries</div></div>
     <div class="met"><div class="ml">High conviction</div><div class="mv c-grn" id="ov-strong">0</div><div class="ms">score ≥ 75</div></div>

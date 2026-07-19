@@ -28,11 +28,11 @@ function assertContains(source, needle, message) {
 
   assertContains(finance, 'href="tama-os.html"', 'Finance should provide a return path to the decision hub.');
   assertContains(finance, 'href="tama-research.html"', 'Finance should provide a path to thesis coverage.');
-  assertContains(finance, 'Decision loop: update money and positions here', 'Finance should explain its role in the decision loop.');
+  assertContains(finance, 'Update money and positions here', 'Finance should explain its role in the decision loop.');
 
   assertContains(research, 'href="tama-os.html"', 'Research should provide a return path to the decision hub.');
   assertContains(research, 'href="tama-finance.html"', 'Research should provide a path to actual holdings and cash context.');
-  assertContains(research, 'Decision loop: keep thesis quality here', 'Research should explain its role in the decision loop.');
+  assertContains(research, 'Keep thesis quality here', 'Research should explain its role in the decision loop.');
 })();
 
 console.log('source integration smoke checks passed');
