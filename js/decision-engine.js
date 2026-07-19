@@ -18,6 +18,22 @@
     return count(summary, 'entries') + count(summary, 'universe') + count(summary, 'journal_import');
   }
 
+  function ageInDays(value, now) {
+    const timestamp = Date.parse(value || '');
+    if (!Number.isFinite(timestamp)) return null;
+    return Math.max(0, Math.floor((now - timestamp) / 86400000));
+  }
+
+  function list(summary, key) {
+    return summary && Array.isArray(summary[key]) ? summary[key] : [];
+  }
+
+  function financialSignals(summary) {
+    return summary && summary.financial_signals && typeof summary.financial_signals === 'object'
+      ? summary.financial_signals
+      : {};
+  }
+
   function addRisk(risks, title, detail, action, severity) {
     risks.push({
       title,
@@ -27,7 +43,12 @@
     });
   }
 
-  function healthFromRisks(risks, financeAvailable, researchAvailable) {
+  function prioritizeRisks(risks) {
+    const severityRank = { high: 0, medium: 1, low: 2 };
+    return [...risks].sort((left, right) => (severityRank[left.severity] ?? 1) - (severityRank[right.severity] ?? 1));
+  }
+
+  function readinessFromRisks(risks, financeAvailable, researchAvailable) {
     if (!financeAvailable && !researchAvailable) {
       return { label: 'Needs data', score: 35 };
     }
@@ -70,6 +91,7 @@
     const financeSummary = financeAvailable ? snapshot.finance.summary : null;
     const researchSummary = researchAvailable ? snapshot.research.summary : null;
     const risks = [];
+    const now = Date.now();
 
     if (!financeAvailable) {
       addRisk(
@@ -79,6 +101,53 @@
         'Open Tama Finance and confirm your accounts, transactions, or positions.',
         'high'
       );
+    }
+
+    if (financeAvailable && count(financeSummary, 'transactions') >= 50 && count(financeSummary, 'months') === 0) {
+      addRisk(
+        risks,
+        'Financial records require review',
+        'A high volume of transactions exists without any monthly summary to anchor the history.',
+        'Create a monthly summary before making a new investment decision.',
+        'high'
+      );
+    }
+
+    if (financeAvailable) {
+      const signals = financialSignals(financeSummary);
+      const emergencyFund = signals.emergency_fund;
+      const investmentCash = signals.investment_cash;
+      const monthly = signals.monthly;
+
+      if (emergencyFund && emergencyFund.available < emergencyFund.floor_target) {
+        addRisk(
+          risks,
+          'Emergency fund below target',
+          `Reported emergency funds cover ${emergencyFund.months_covered.toFixed(1)} months, below the 6-month floor.`,
+          'Top up the emergency fund before increasing investment exposure.',
+          'high'
+        );
+      }
+
+      if (investmentCash && investmentCash.minimum > 0 && investmentCash.available < investmentCash.minimum) {
+        addRisk(
+          risks,
+          'Investment cash buffer below minimum',
+          'Reported investment cash is below the minimum buffer configured in Finance.',
+          'Restore the investment cash buffer before opening another position.',
+          'high'
+        );
+      }
+
+      if (monthly && monthly.income > 0 && monthly.expenses !== null && monthly.expenses > monthly.income) {
+        addRisk(
+          risks,
+          'Monthly spending exceeds recorded income',
+          `Recorded expenses for ${monthly.month_key} exceed recorded income.`,
+          'Review current-month spending before committing new capital.',
+          'high'
+        );
+      }
     }
 
     if (!researchAvailable) {
@@ -111,12 +180,15 @@
       );
     }
 
-    if (financeAvailable && researchAvailable && count(financeSummary, 'positions') > 0 && count(researchSummary, 'entries') === 0) {
+    const positionTickers = list(financeSummary, 'active_position_tickers');
+    const thesisTickers = new Set(list(researchSummary, 'decision_ready_thesis_tickers'));
+    const uncoveredTickers = positionTickers.filter((ticker) => !thesisTickers.has(ticker));
+    if (financeAvailable && researchAvailable && uncoveredTickers.length > 0) {
       addRisk(
         risks,
-        'Position thesis coverage missing',
-        'Finance has open investment records, but Research has no thesis entries to support review.',
-        'Create or update research thesis entries for current holdings before adding risk.',
+        'Holdings without thesis coverage',
+        `${uncoveredTickers.join(', ')} ${uncoveredTickers.length === 1 ? 'has' : 'have'} no decision-ready Research thesis.`,
+        'Create research before increasing exposure.',
         'high'
       );
     }
@@ -131,8 +203,22 @@
       );
     }
 
-    const health = healthFromRisks(risks, financeAvailable, researchAvailable);
-    const priorityRisk = risks[0] || null;
+    [
+      ['Finance', financeAvailable && financeSummary],
+      ['Research', researchAvailable && researchSummary],
+    ].forEach(([name, summary]) => {
+      if (!summary) return;
+      const age = ageInDays(summary.last_updated, now);
+      if (age === null) {
+        addRisk(risks, `${name} freshness unknown`, `${name} has data but no reliable saved timestamp.`, `Save ${name} once before relying on this brief.`, 'medium');
+      } else if (age > 30) {
+        addRisk(risks, `${name} data is stale`, `${name} was last saved ${age} days ago.`, `Review and save ${name} before making a new decision.`, 'high');
+      }
+    });
+
+    const prioritizedRisks = prioritizeRisks(risks);
+    const readiness = readinessFromRisks(prioritizedRisks, financeAvailable, researchAvailable);
+    const priorityRisk = prioritizedRisks[0] || null;
     const fallback = defaultPriority(financeAvailable, researchAvailable);
     const topPriority = priorityRisk
       ? { title: priorityRisk.title, why: priorityRisk.detail }
@@ -145,9 +231,12 @@
       version: 'tama-decision-engine-v1',
       snapshot_version: snapshot ? snapshot.version : null,
       generated_at: snapshot ? snapshot.generated_at : null,
-      financial_health: health,
+      decision_readiness: readiness,
+      // Backward compatibility for existing callers.
+      financial_health: readiness,
       top_priority: topPriority,
-      key_risks: risks.slice(0, 3),
+      all_key_risks: prioritizedRisks,
+      key_risks: prioritizedRisks.slice(0, 3),
       recommended_next_action: recommendedNextAction,
     };
   }

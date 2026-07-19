@@ -15,7 +15,17 @@
       };
     }
 
-    const raw = storage.getItem(key);
+    let raw;
+    try {
+      raw = storage.getItem(key);
+    } catch (error) {
+      return {
+        key,
+        available: false,
+        value: null,
+        error: `Unable to read ${key}: ${error.message}`,
+      };
+    }
     if (!raw) {
       return { key, available: false, value: null, error: null };
     }
