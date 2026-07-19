@@ -114,6 +114,36 @@
     };
   }
 
+  function restore(storage) {
+    if (!storage || typeof storage.setItem !== 'function' || typeof storage.getItem !== 'function') {
+      throw new Error('LocalStorage is not available for demo restore.');
+    }
+
+    const rawBackup = storage.getItem(BACKUP_KEY);
+    if (!rawBackup) {
+      throw new Error('No Tama OS demo backup was found in this browser.');
+    }
+
+    const backup = JSON.parse(rawBackup);
+    const previous = backup && backup.previous ? backup.previous : {};
+    const removeItem = typeof storage.removeItem === 'function' ? storage.removeItem.bind(storage) : null;
+
+    [FINANCE_KEY, RESEARCH_KEY].forEach((key) => {
+      if (previous[key] === null || previous[key] === undefined) {
+        if (removeItem) removeItem(key);
+        else storage.setItem(key, '');
+        return;
+      }
+      storage.setItem(key, previous[key]);
+    });
+
+    return {
+      backup_key: BACKUP_KEY,
+      restored_at: new Date().toISOString(),
+      created_at: backup.created_at || null,
+    };
+  }
+
   global.TamaDemoData = Object.freeze({
     FINANCE_KEY,
     RESEARCH_KEY,
@@ -121,5 +151,6 @@
     finance,
     research,
     install,
+    restore,
   });
 })(window);

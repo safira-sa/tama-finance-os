@@ -19,7 +19,7 @@ The demo persona is a self-directed investor with:
 3. Confirm the overwrite warning if existing local data is detected.
 4. Review Today’s Brief and ask the Copilot: “What should I do next?”
 
-The button stores a local backup under `tama-os-demo-backup-v1` before writing demo data to `tama-v8` and `tama-research-v1`.
+The button stores a local backup under `tama-os-demo-backup-v1` before writing demo data to `tama-v8` and `tama-research-v1`. Use **Restore previous data** in Tama OS to restore the last saved pre-demo values in the same browser.
 
 ## Manual import fallback
 
@@ -42,4 +42,4 @@ Always export existing personal data before loading demo data.
 - monthly spending above income; and
 - a completely empty browser.
 
-These scenarios are not installed by the **Load demo data** button. They are reference fixtures for smoke tests, QA, and future demo scripts.
+These scenarios are not installed by the **Load demo data** button. Tama OS links to them from a collapsed **Demo scenarios** section so they stay available for reviewers without making the product feel like a test harness.

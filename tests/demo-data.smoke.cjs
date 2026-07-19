@@ -22,6 +22,9 @@ function memoryStorage(initial = {}) {
     setItem(key, value) {
       records[key] = String(value);
     },
+    removeItem(key) {
+      delete records[key];
+    },
     dump() {
       return { ...records };
     },
@@ -67,6 +70,23 @@ function decideScenario(tama, scenario, freshIso, staleIso) {
   assert.equal(snapshot.finance.summary.active_position_tickers.includes('TLKM'), true);
   assert.equal(snapshot.research.summary.decision_ready_thesis_tickers.includes('BBCA'), true);
   assert.equal(decision.all_key_risks.some((risk) => risk.title === 'Holdings without thesis coverage' && risk.detail.includes('TLKM')), true);
+})();
+
+(function demoDataRestoresPreviousLocalValues() {
+  const tama = loadBrowserModules();
+  const originalFinance = JSON.stringify({ existing: 'finance' });
+  const storage = memoryStorage({ [tama.TamaState.FINANCE_KEY]: originalFinance });
+
+  tama.TamaDemoData.install(storage);
+  let records = storage.dump();
+  assert.notEqual(records[tama.TamaState.FINANCE_KEY], originalFinance);
+  assert.ok(records[tama.TamaState.RESEARCH_KEY]);
+
+  const result = tama.TamaDemoData.restore(storage);
+  records = storage.dump();
+  assert.equal(result.backup_key, tama.TamaDemoData.BACKUP_KEY);
+  assert.equal(records[tama.TamaState.FINANCE_KEY], originalFinance);
+  assert.equal(Object.prototype.hasOwnProperty.call(records, tama.TamaState.RESEARCH_KEY), false);
 })();
 
 (function demoJsonFilesMatchScriptPayloads() {

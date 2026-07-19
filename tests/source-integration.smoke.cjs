@@ -33,6 +33,10 @@ function assertContains(source, needle, message) {
   assertContains(os, 'Research Workspace', 'Tama OS should expose unified Research Workspace language.');
   assertContains(os, 'Explain Recommendation', 'Tama OS should frame Copilot as explanation, not app switching.');
   assertContains(os, 'Educational decision support only', 'Tama OS should display a visible financial-advice boundary.');
+  assertContains(os, 'demo-data/os-scenarios.json', 'Tama OS should link to the scenario catalog without making it primary UI.');
+  assertContains(os, 'Demo scenarios', 'Tama OS should tuck scenario fixtures behind a secondary details section.');
+  assertContains(os, 'Why this recommendation?', 'Tama OS should explain why the top recommendation was selected.');
+  assertContains(os, 'id="restore-demo-backup"', 'Tama OS should expose a guarded demo restore action.');
 })();
 
 (function standaloneAppsExposeDecisionLoopWithoutChangingWritePaths() {

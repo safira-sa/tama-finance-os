@@ -45,7 +45,7 @@ All user data is stored in the browser’s `localStorage`. Use each app’s expo
 - Tama OS reads local snapshots only; it makes no storage writes.
 - Finance and Research remain independent full-page applications.
 - Cross-app data exchange is explicit import/export, never automatic sync.
-- The deterministic brief surfaces data readiness rather than claiming to provide financial advice. It is educational decision support only.
+- The deterministic brief surfaces data readiness rather than claiming to provide financial advice. It is educational decision support only, with a visible rule trace explaining why the top recommendation was selected.
 
 ## Repository map
 
@@ -63,7 +63,7 @@ All user data is stored in the browser’s `localStorage`. Use each app’s expo
 - **What existed before:** the standalone Finance and Research browser apps. They remain independently usable and are intentionally not merged into one write path yet.
 - **How GPT-5.6 is used:** GPT-5.6 explains structured deterministic findings through the Responses API when a session-only key is supplied; without a key, Tama OS shows the same recommendation through a deterministic offline explanation.
 - **How Codex was used:** Codex inspected the existing apps, implemented the new read-only OS layer and tests, and helped harden safety boundaries. Include the required `/feedback` Codex Session ID in Devpost.
-- **Demo data:** all demo payloads are fictional and non-personal; loading demo data saves a local backup under `tama-os-demo-backup-v1` before writing sample Finance/Research records.
+- **Demo data:** all demo payloads are fictional and non-personal; loading demo data saves a local backup under `tama-os-demo-backup-v1` before writing sample Finance/Research records, and Tama OS can restore that previous data from the same browser.
 
 ## Built with Codex and GPT-5.6
 

@@ -358,6 +358,40 @@
       margin-top: 16px;
     }
 
+    .reason-trace,
+    .demo-details {
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .reason-trace summary,
+    .demo-details summary {
+      cursor: pointer;
+      color: var(--soft);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .reason-list,
+    .demo-scenario-list {
+      display: grid;
+      gap: 8px;
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .demo-details p {
+      margin-top: 10px;
+      font-size: 12px;
+    }
+
     .demo-status {
       margin: 10px 0 0;
       color: var(--muted);
@@ -875,6 +909,7 @@
               <div class="snapshot-actions" aria-label="Snapshot actions">
                 <button class="btn primary" type="button" id="refresh-snapshot">Refresh Local Snapshot</button>
                 <button class="btn" type="button" id="load-demo-brief">Load demo data</button>
+                <button class="btn" type="button" id="restore-demo-backup">Restore previous data</button>
               </div>
               <p class="demo-status" id="demo-status" aria-live="polite">Demo data is optional. Loading it saves a local backup first.</p>
               <div class="brief-output" aria-live="polite">
@@ -897,6 +932,22 @@
                   <a class="btn primary resolve-action" id="resolve-action" href="#copilot">Resolve Top Priority</a>
                 </div>
               </div>
+              <details class="reason-trace">
+                <summary>Why this recommendation?</summary>
+                <ul class="reason-list" id="brief-reason-trace"><li>Checking local rules…</li></ul>
+              </details>
+              <details class="demo-details">
+                <summary>Demo scenarios</summary>
+                <p>Load demo data installs the polished TLKM thesis-gap walkthrough. The full scenario catalog is kept as a quiet reviewer/QA reference, not a front-and-center test harness.</p>
+                <ul class="demo-scenario-list">
+                  <li>Ready for review</li>
+                  <li>Intentional TLKM thesis gap</li>
+                  <li>Stale money data</li>
+                  <li>Missing Research Workspace data</li>
+                  <li>Emergency fund or monthly spending blockers</li>
+                </ul>
+                <p><a href="demo-data/os-scenarios.json">Open scenario catalog JSON</a></p>
+              </details>
               <div class="snapshot-status" aria-live="polite">
                 <div class="snapshot-row"><span>Finance data</span><span id="snapshot-finance-status">Checking…</span></div>
                 <div class="snapshot-row"><span>Research data</span><span id="snapshot-research-status">Checking…</span></div>
@@ -1118,6 +1169,31 @@
         }
       }
 
+      function renderReasonTrace(brief) {
+        const list = document.getElementById('brief-reason-trace');
+        if (!list) return;
+        const risks = Array.isArray(brief && brief.key_risks) ? brief.key_risks : [];
+        const topRisk = risks[0];
+        const items = topRisk
+          ? [
+              `Top blocker: ${topRisk.title}.`,
+              `Evidence: ${topRisk.detail}`,
+              `Rule action: ${topRisk.action}`,
+            ]
+          : [
+              'Finance and Research snapshots are readable in this browser.',
+              'No high-priority deterministic blockers were found in the current brief.',
+              'Keep Money and Research updated, then refresh before making the next decision.',
+            ];
+
+        list.replaceChildren();
+        items.forEach((text) => {
+          const item = document.createElement('li');
+          item.textContent = text;
+          list.appendChild(item);
+        });
+      }
+
       function renderTodayBrief(brief) {
         const readiness = brief.decision_readiness || brief.financial_health;
         // The deterministic engine communicates a readiness band, not a statistically
@@ -1128,6 +1204,7 @@
         setText('brief-action', brief.recommended_next_action);
         setText('priority-count', brief.top_priority ? '1' : '0');
         renderRisks(brief.key_risks);
+        renderReasonTrace(brief);
         updateResolveAction(brief);
       }
 
@@ -1168,6 +1245,7 @@
           latestSnapshot = null;
           latestBrief = null;
           renderRisks([]);
+          renderReasonTrace({ key_risks: [{ title: 'Local storage unavailable', detail: error.message, action: 'Allow local storage, then refresh the snapshot.' }] });
           return;
         }
 
@@ -1265,6 +1343,28 @@ Today’s Brief above still works offline. You can use “Show context prompt”
         }
       }
 
+      function restoreDemoBackup() {
+        if (!window.TamaDemoData || typeof window.TamaDemoData.restore !== 'function') {
+          setDemoStatus('Demo restore is unavailable in this build.');
+          return;
+        }
+
+        const confirmed = window.confirm('Restore the Finance and Research values saved before the last demo load? This replaces the current demo values in this browser.');
+        if (!confirmed) {
+          setDemoStatus('Restore cancelled. Current local data was not changed.');
+          return;
+        }
+
+        try {
+          const result = window.TamaDemoData.restore(window.localStorage);
+          renderSnapshotStatus();
+          setDemoStatus(`Previous local data restored from ${result.backup_key}.`);
+          setCopilotOutput('Previous local data restored. Refresh Today’s Brief before asking for another explanation.');
+        } catch (error) {
+          setDemoStatus(`Previous data could not be restored: ${error.message}`);
+        }
+      }
+
       function bindCopilot() {
         document.getElementById('copilot-run')?.addEventListener('click', runCopilotExplanation);
         document.getElementById('copilot-show-prompt')?.addEventListener('click', showCopilotPrompt);
@@ -1277,6 +1377,7 @@ Today’s Brief above still works offline. You can use “Show context prompt”
         });
         document.getElementById('load-demo-hero')?.addEventListener('click', loadDemoData);
         document.getElementById('load-demo-brief')?.addEventListener('click', loadDemoData);
+        document.getElementById('restore-demo-backup')?.addEventListener('click', restoreDemoBackup);
       }
 
       document.addEventListener('DOMContentLoaded', () => {
