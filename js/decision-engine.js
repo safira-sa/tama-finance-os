@@ -67,15 +67,15 @@
   function defaultPriority(financeAvailable, researchAvailable) {
     if (!financeAvailable) {
       return {
-        title: 'Open Tama Finance and save your baseline',
-        why: 'The OS cannot brief financial state until Finance data exists in the current browser.',
+        title: 'Update Money Data to save your baseline',
+        why: 'The OS cannot brief financial state until Money Workspace data exists in the current browser.',
       };
     }
 
     if (!researchAvailable) {
       return {
-        title: 'Open Research Desk and add your watchlist',
-        why: 'Research context is missing, so investment thesis coverage cannot be reviewed yet.',
+        title: 'Fix Thesis Coverage in Research Workspace',
+        why: 'Research Workspace context is missing, so investment thesis coverage cannot be reviewed yet.',
       };
     }
 
@@ -97,8 +97,8 @@
       addRisk(
         risks,
         'Finance data missing',
-        'Tama OS cannot assess financial state until the Finance app has saved local data.',
-        'Open Tama Finance and confirm your accounts, transactions, or positions.',
+        'Tama OS cannot assess financial state until the Money Workspace has saved local data.',
+        'Open Money Workspace and confirm your accounts, transactions, or positions.',
         'high'
       );
     }
@@ -154,8 +154,8 @@
       addRisk(
         risks,
         'Research data missing',
-        'Tama OS cannot compare investment activity with research thesis coverage yet.',
-        'Open Research Desk and add at least one watchlist or thesis entry.',
+        'Tama OS cannot compare investment activity with Research Workspace thesis coverage yet.',
+        'Open Research Workspace and add at least one watchlist or thesis entry.',
         'medium'
       );
     }
@@ -165,7 +165,7 @@
         risks,
         'Finance file is empty',
         'The Finance storage key exists, but it does not contain records useful for a brief yet.',
-        'Add accounts, a transaction, or a monthly entry in Tama Finance.',
+        'Add accounts, a transaction, or a monthly entry in Money Workspace.',
         'high'
       );
     }
@@ -175,7 +175,7 @@
         risks,
         'Research file is empty',
         'The Research storage key exists, but no entries or universe records were found.',
-        'Add a research idea or universe record in Tama Research Desk.',
+        'Add a research idea or universe record in Research Workspace.',
         'medium'
       );
     }
@@ -198,7 +198,7 @@
         risks,
         'Monthly activity not recorded',
         'No month, transaction, or expense records were detected for financial context.',
-        'Record the current month or latest financial event in Tama Finance.',
+        'Record the current month or latest financial event in Money Workspace.',
         'medium'
       );
     }
