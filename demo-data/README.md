@@ -25,8 +25,8 @@ The button stores a local backup under `tama-os-demo-backup-v1` before writing d
 
 If the button is not available in a browser context, import these files manually:
 
-- `finance-demo.json` in Tama Finance.
-- `research-demo.json` in Tama Research.
+- `finance-demo.json` in Money Workspace.
+- `research-demo.json` in Research Workspace.
 
 Always export existing personal data before loading demo data.
 

@@ -2,7 +2,7 @@
 
 Tama OS is a local-first personal-finance decision workspace. It keeps two focused workspaces separate—Money Workspace and Research Workspace—then provides a read-only Tama OS brief that highlights data readiness, missing thesis coverage, and stale local records.
 
-The current milestone is a deterministic, read-only decision engine. Its rules and explicit non-goals are documented in [`docs/decision-engine.md`](docs/decision-engine.md).
+The current milestone is a deterministic, read-only decision hub. Its rules and explicit non-goals are documented in [`docs/decision-engine.md`](docs/decision-engine.md).
 
 ## OpenAI Build Week track
 
@@ -19,7 +19,7 @@ No build step or server is required.
 5. Ask the Copilot “What should I do next?” with no API key to use local deterministic mode.
 6. Optional: paste an OpenAI API key into the Copilot field to ask GPT-5.6 to explain the same deterministic recommendation. The key is used for that browser session only and is not stored.
 
-All user data is stored in the browser’s `localStorage`. Use each app’s export function before clearing browser data or moving to another browser. The demo loader saves the previous Finance/Research localStorage values under `tama-os-demo-backup-v1` before writing fictional demo data.
+All user data is stored in the browser’s `localStorage`. Use each app’s export function before clearing browser data or moving to another browser. The demo loader saves the previous Money/Research workspace values under `tama-os-demo-backup-v1` before writing fictional demo data.
 
 ## Judge demo path
 
@@ -43,15 +43,15 @@ All user data is stored in the browser’s `localStorage`. Use each app’s expo
 ## Design and safety boundaries
 
 - Tama OS reads local snapshots only; it makes no storage writes.
-- Finance and Research remain independent full-page applications.
-- Cross-app data exchange is explicit import/export, never automatic sync.
+- Money and Research workspaces remain independent full-page applications.
+- Cross-workspace data exchange is explicit import/export, never automatic sync.
 - The deterministic brief surfaces data readiness rather than claiming to provide financial advice. It is educational decision support only, with a visible rule trace explaining why the top recommendation was selected.
 
 ## Repository map
 
 - `tama-os.html` — unified decision hub.
-- `tama-finance.html` — standalone Finance app.
-- `tama-research.html` — standalone Research app.
+- `tama-finance.html` — standalone Money Workspace.
+- `tama-research.html` — standalone Research Workspace.
 - `js/` — shared read-only snapshot, decision, AI, and demo helpers.
 - `demo-data/` — fictional judging/demo payloads.
 - `tests/` — Node smoke and acceptance checks.
@@ -67,7 +67,7 @@ All user data is stored in the browser’s `localStorage`. Use each app’s expo
 
 ## Built with Codex and GPT-5.6
 
-Codex was used during the hackathon to inspect the existing Finance and Research applications, implement the Tama OS read-only snapshot and deterministic decision rules, add the GPT-5.6 copilot explanation layer, improve storage failure handling, and validate the decision engine with smoke tests. Product, UX, and safety-boundary decisions remained human-directed.
+Codex was used during the hackathon to inspect the existing Money and Research workspaces, implement the Tama OS read-only snapshot and deterministic decision rules, add the GPT-5.6 copilot explanation layer, improve storage failure handling, and validate the decision engine with smoke tests. Product, UX, and safety-boundary decisions remained human-directed.
 
 For submission, include the required `/feedback` Codex Session ID from the thread where the majority of the core work was completed, plus a short walkthrough of the Codex-assisted changes in the demo video.
 

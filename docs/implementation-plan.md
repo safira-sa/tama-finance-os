@@ -285,7 +285,7 @@ Recommended output:
   "primary_recommendation": {
     "title": "Review thesis gaps before adding risk",
     "why": "2 open positions do not have active research coverage.",
-    "action": "Open Research Desk and write/update thesis for the uncovered holdings.",
+    "action": "Open Research Workspace and write/update thesis for the uncovered holdings.",
     "confidence": "medium"
   },
   "findings": [],
@@ -371,8 +371,8 @@ Dashboard sections:
    - Last saved/exported if available.
 
 5. Launch Cards
-   - Open Finance.
-   - Open Research.
+   - Open Money Workspace.
+   - Open Research Workspace.
 
 Design should be polished enough for judging but avoid complex UI architecture.
 
@@ -486,10 +486,10 @@ Judges should see value immediately without requiring manual setup.
 
 ### Files to Modify
 
-- `assets/demo-data/finance-demo.json` — optional new demo Finance data.
-- `assets/demo-data/research-demo.json` — optional new demo Research data.
+- `demo-data/finance-demo.json` — optional new demo Finance data.
+- `demo-data/research-demo.json` — optional new demo Research data.
 - `tama-os.html` — optional “Load demo data” helper after explicit approval.
-- `implementation-plan.md` should remain the planning source; runtime code only after approval.
+- `docs/implementation-plan.md` should remain the planning source; runtime code only after approval.
 
 ### Estimated Implementation Time
 
@@ -538,8 +538,8 @@ A reliable scripted dataset dramatically improves demo quality and reduces prese
 - Start in a clean browser profile.
 - Load demo data or import demo JSON.
 - Refresh Tama OS and verify dashboard recommendations appear.
-- Open Finance and verify demo finance data appears.
-- Open Research and verify demo research data appears.
+- Open Money Workspace and verify demo finance data appears.
+- Open Research Workspace and verify demo research data appears.
 - Confirm existing data warning appears before any write-based demo load.
 - Confirm restore/export path exists before demo overwrite.
 - Confirm demo path can be repeated for recording.
@@ -622,7 +622,7 @@ Make the submission feel stable, understandable, and judge-ready.
 - `README.md` — update launch/demo instructions after approval.
 - `tama-os.html` — final copy polish and empty states.
 - `js/*` new files only as needed.
-- `assets/demo-data/*` if demo data is included.
+- `demo-data/*` if demo data is included.
 
 ### Estimated Implementation Time
 

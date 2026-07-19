@@ -91,8 +91,8 @@ Risks:
 
 Suggested testing:
 
-- Open Finance from the shell.
-- Open Research from the shell.
+- Open Money Workspace from the shell.
+- Open Research Workspace from the shell.
 - Verify both themes, modals, charts, imports, and exports still work.
 - Verify existing localStorage data remains visible.
 
