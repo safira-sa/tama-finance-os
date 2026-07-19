@@ -644,6 +644,10 @@
       .module-card,
       .copilot-card { padding: 22px; }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
   </style>
 </head>
 <body>
@@ -651,14 +655,14 @@
     <header class="topbar" aria-label="Tama OS navigation">
       <a class="brand" href="#dashboard" aria-label="Tama OS home">
         <span class="brand-mark">T</span>
-        <span>Tama OS<small>Build Week Shell</small></span>
+        <span>Tama OS<small>Local-first decision layer</small></span>
       </a>
 
       <nav class="nav" aria-label="Main navigation">
         <a href="#dashboard">Dashboard</a>
         <a href="#apps">Finance</a>
         <a href="#apps">Research</a>
-        <a href="#copilot">AI Copilot</a>
+        <a href="#copilot">Decision Engine</a>
       </nav>
 
       <div class="top-actions">
@@ -678,7 +682,7 @@
           <div class="hero-actions" aria-label="Application entry points">
             <a class="btn primary" href="tama-finance.html">Open Finance</a>
             <a class="btn" href="tama-research.html">Open Research</a>
-            <a class="btn" href="#copilot">View Copilot Placeholder</a>
+            <a class="btn" href="#copilot">View Decision Engine</a>
           </div>
         </div>
 
@@ -699,7 +703,7 @@
               </p>
               <div class="brief-output" aria-live="polite">
                 <div class="brief-item">
-                  <p class="k">Financial Health</p>
+                  <p class="k">Decision Readiness</p>
                   <p class="v" id="brief-health">Checking…</p>
                 </div>
                 <div class="brief-item">
@@ -740,7 +744,7 @@
             <h2 id="apps-title">Two proven MVPs, one front door.</h2>
           </div>
           <p>
-            The shell provides coherent navigation without merging scripts, DOM, storage, or business logic. Each app opens as its own full page.
+             The shell provides coherent navigation while keeping Finance and Research as full-page apps. Their optional import/export bridge remains explicit and user-controlled.
           </p>
         </div>
 
@@ -764,7 +768,7 @@
             <ul>
               <li>Preserves existing Research functionality.</li>
               <li>Uses the current Research page directly.</li>
-              <li>No state merge or bridge automation yet.</li>
+               <li>Optional Finance snapshot import remains user-controlled.</li>
             </ul>
             <a class="btn" href="tama-research.html">Open Research</a>
           </article>
@@ -775,10 +779,10 @@
         <div class="section-head">
           <div>
             <p class="label">Operating system layer</p>
-            <h2 id="placeholder-title">Decision layer, ready for AI.</h2>
+            <h2 id="placeholder-title">Decision layer, built for clarity.</h2>
           </div>
           <p>
-            Milestone 3 adds a small deterministic decision engine only. Shared writes, AI reasoning, and future dashboard expansion remain deferred until approval.
+             The current milestone adds a deterministic decision engine. It performs no shared writes or AI reasoning; the existing app-to-app import/export bridge remains explicit.
           </p>
         </div>
 
@@ -806,38 +810,38 @@
       <section id="copilot" aria-labelledby="copilot-title">
         <div class="section-head">
           <div>
-            <p class="label">AI Copilot placeholder</p>
-            <h2 id="copilot-title">Reasoning layer coming next.</h2>
+            <p class="label">Deterministic decision engine</p>
+            <h2 id="copilot-title">A clear next action, with evidence.</h2>
           </div>
           <p>
-            This is UI only. No API calls, no prompts, no AI logic, and no data access are implemented yet.
+            Tama OS evaluates a read-only local snapshot with transparent rules. It reports what is missing, why it matters, and what to do before taking more risk.
           </p>
         </div>
 
         <article class="copilot-card">
           <div>
-            <h3>GPT-5.6 Copilot</h3>
+            <h3>Decision readiness, not a black box.</h3>
             <p>
-              Future AI milestone: explain the deterministic recommendation using structured local financial data. The copilot will not replace the decision engine or directly mutate user data.
+              Finance owns money and positions. Research owns thesis quality. Tama OS reads both without changing either app, then surfaces the highest-priority decision gap.
             </p>
-            <div class="lockup" aria-label="Copilot status tags">
-              <span class="chip">UI placeholder</span>
-              <span class="chip">No API call</span>
+            <div class="lockup" aria-label="Decision engine status tags">
+              <span class="chip">Rule-based</span>
+              <span class="chip">Read-only</span>
               <span class="chip">No data mutation</span>
             </div>
           </div>
 
-          <div class="chat-preview" aria-label="Copilot preview conversation">
-            <div class="bubble user">What should I do next?</div>
-            <div class="bubble">In a future AI milestone, I’ll explain your next best action using the local snapshot from Finance and Research.</div>
-            <div class="bubble">For now, open Finance or Research to continue using the existing production MVPs.</div>
+          <div class="chat-preview" aria-label="Decision-engine example">
+            <div class="bubble user">Can I add risk to this portfolio today?</div>
+            <div class="bubble">First, check the evidence: are your cash safeguards, monthly records, and holding theses complete?</div>
+            <div class="bubble">If a required input is missing, Tama OS tells you what to fix before you commit more capital.</div>
           </div>
         </article>
       </section>
     </main>
 
     <footer class="footer">
-      <span>Tama OS Milestone 3 — deterministic Today’s Brief.</span>
+      <span>Tama OS — deterministic decision readiness.</span>
       <span>No backend · No framework · No storage writes · No state merge</span>
     </footer>
   </div>
@@ -896,17 +900,34 @@
 
         const visibleRisks = risks && risks.length ? risks.slice(0, 3) : [];
         if (!visibleRisks.length) {
-          list.innerHTML = '<li>No immediate deterministic risks found.</li>';
+          list.replaceChildren();
+          const item = document.createElement('li');
+          item.textContent = 'No immediate deterministic risks found.';
+          list.appendChild(item);
           return;
         }
 
-        list.innerHTML = visibleRisks
-          .map((risk) => `<li><strong>${risk.title}</strong> — ${risk.detail}</li>`)
-          .join('');
+        list.replaceChildren();
+        visibleRisks.forEach((risk) => {
+          const item = document.createElement('li');
+          const title = document.createElement('strong');
+          title.textContent = risk.title;
+          item.append(title, document.createTextNode(` — ${risk.detail}`));
+          list.appendChild(item);
+        });
+
+        if (risks.length > visibleRisks.length) {
+          const item = document.createElement('li');
+          item.textContent = `+${risks.length - visibleRisks.length} additional issue(s) in the local decision record.`;
+          list.appendChild(item);
+        }
       }
 
       function renderTodayBrief(brief) {
-        setText('brief-health', `${brief.financial_health.label} · ${brief.financial_health.score}/100`);
+        const readiness = brief.decision_readiness || brief.financial_health;
+        // The deterministic engine communicates a readiness band, not a statistically
+        // calibrated score. Showing only the band keeps the UI honest and actionable.
+        setText('brief-health', readiness.label);
         setText('brief-priority', brief.top_priority.title);
         setText('brief-priority-detail', brief.top_priority.why);
         setText('brief-action', brief.recommended_next_action);
@@ -915,8 +936,25 @@
       }
 
       function renderSnapshotStatus() {
-        const snapshot = window.TamaState.buildSnapshot(window.localStorage);
-        const brief = window.TamaDecisionEngine.analyze(snapshot);
+        let snapshot;
+        let brief;
+        try {
+          snapshot = window.TamaState.buildSnapshot(window.localStorage);
+          brief = window.TamaDecisionEngine.analyze(snapshot);
+        } catch (error) {
+          setText('snapshot-finance-status', 'Unavailable');
+          setText('snapshot-research-status', 'Unavailable');
+          setText('snapshot-updated', 'Storage access blocked');
+          setText('snapshot-version', 'Unavailable');
+          setText('brief-health', 'Cannot read local data');
+          setText('brief-priority', 'Enable local storage to use Today’s Brief');
+          setText('brief-priority-detail', error.message);
+          setText('brief-action', 'Open Finance or Research in a browser context that allows local storage.');
+          setText('finance-record-count', '0');
+          setText('research-record-count', '0');
+          renderRisks([]);
+          return;
+        }
 
         setText('snapshot-finance-status', formatStatus(snapshot.finance));
         setText('snapshot-research-status', formatStatus(snapshot.research));

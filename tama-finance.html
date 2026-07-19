@@ -154,6 +154,9 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
   .bridge-actions .btn{flex:1 1 150px;}
 }
 
+:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
 </style>
 
 
@@ -712,7 +715,7 @@ canvas{
     </div>
     <div id="exp-form" style="display:none;background:var(--surf2);border-radius:var(--rsm);padding:13px;margin-bottom:12px">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-        <div class="field" style="margin-bottom:0"><label>Category</label><select id="exp-cat" class="fi ft" onchange="populateExpAccount()"><option>Allowance</option><option>Transport</option><option>Personal development</option><option>Other</option></select></div>
+        <div class="field" style="margin-bottom:0"><label>Category</label><select id="exp-cat" class="fi ft" onchange="populateExpAccount()"><option>Allowance</option><option>Transport</option><option value="Personal Dev">Personal development</option><option>Other</option></select></div>
         <div class="field" style="margin-bottom:0"><label>From account</label><select id="exp-account" class="fi ft"></select></div>
         <div class="field" style="margin-bottom:0"><label>Amount</label><input type="number" id="exp-amt" class="fi" placeholder="0"></div>
         <div class="field" style="margin-bottom:0"><label>Description</label><input type="text" id="exp-desc" class="fi ft" placeholder="Optional"></div>
@@ -769,7 +772,7 @@ canvas{
         <div class="field" id="txn-to-wrap" style="display:none"><label>To account</label><select id="txn-to" class="fi ft" onchange="txnToChange()"></select><div class="hint">Used only for Transfer</div></div>
       </div>
       <div class="g2" style="gap:10px;margin-bottom:0">
-        <div class="field" id="txn-bucket-wrap"><label>Bucket</label><select id="txn-bucket" class="fi ft"><option>Investment</option><option>Emergency Fund</option><option>Sinking Fund</option><option>Personal development</option><option>Allowance</option><option>ME</option><option>Transfer</option></select></div>
+        <div class="field" id="txn-bucket-wrap"><label>Bucket</label><select id="txn-bucket" class="fi ft"><option>Investment</option><option>Emergency Fund</option><option>Sinking Fund</option><option value="Personal Dev">Personal development</option><option>Allowance</option><option>ME</option><option>Transfer</option></select></div>
         <div class="field" id="txn-fee-wrap" style="display:none"><label>Admin fee / bank fee</label><input type="number" id="txn-fee" class="fi" placeholder="0" min="0"><div class="hint">Deducted from source account only.</div></div>
       </div>
       <div class="field" id="txn-sink-wrap" style="display:none"><label>Sinking fund target</label><select id="txn-sink-id" class="fi ft"></select><div class="hint">Auto-fills from the source account when possible.</div></div>
@@ -795,7 +798,7 @@ canvas{
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;font-size:12px;">
         <select id="txn-filter-month" class="fi ft" style="padding:5px 10px;font-size:12px;width:auto;min-width:120px" onchange="uiState.txnMonthFilter=this.value;uiState.txnPage=0;rTxn()"></select>
         <select id="txn-filter-acc" class="fi ft" style="padding:5px 10px;font-size:12px;width:auto;min-width:120px" onchange="uiState.txnPage=0;rTxn()"><option value="">All accounts</option></select>
-        <select id="txn-filter-bkt" class="fi ft" style="padding:5px 10px;font-size:12px;width:auto;min-width:120px" onchange="uiState.txnPage=0;rTxn()"><option value="">All buckets</option><option>Investment</option><option>Emergency Fund</option><option>Sinking Fund</option><option>Personal development</option><option>Allowance</option><option>Transfer</option></select>
+        <select id="txn-filter-bkt" class="fi ft" style="padding:5px 10px;font-size:12px;width:auto;min-width:120px" onchange="uiState.txnPage=0;rTxn()"><option value="">All buckets</option><option>Investment</option><option>Emergency Fund</option><option>Sinking Fund</option><option value="Personal Dev">Personal development</option><option>Allowance</option><option>Transfer</option></select>
       </div>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px">
@@ -1486,6 +1489,7 @@ function normalizeState(raw){
     if(t.amount===undefined && t.amt!==undefined)t.amount=t.amt;
     t.amount=parseFloat(t.amount)||0;
     if(!t.type)t.type='Transaction';
+    if(t.bucket==='Personal development')t.bucket='Personal Dev';
     if(!t.bucket)t.bucket='Allowance';
     if(!t.entry_id)t.entry_id=`JE-${String(t.month_key||String(t.date).slice(0,7)||'0000-00').replace('-','')}-${t.id}`;
     if(t.voided===undefined)t.voided=false;
@@ -1524,6 +1528,7 @@ function normalizeState(raw){
     if(!e.month_key && e.date)e.month_key=String(e.date).slice(0,7);
     if(e.voided===undefined)e.voided=false;
     if(e.amount===undefined && e.amt!==undefined)e.amount=e.amt;
+    if(e.cat==='Personal development')e.cat='Personal Dev';
     e.amount=parseFloat(e.amount)||0;
     const baseCur=(s.config.base_currency||'IDR').toUpperCase();
     const expAmt=parseFloat(e.amt!==undefined?e.amt:e.amount)||0;

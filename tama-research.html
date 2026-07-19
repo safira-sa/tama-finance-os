@@ -189,6 +189,9 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 .danger-chip{background:var(--red-b);color:var(--red);border-color:rgba(224,80,80,.25)}
 .ok-chip{background:var(--grn-b);color:var(--grn);border-color:rgba(40,167,69,.25)}
 
+:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
+
 </style>
 
 <style>
@@ -1585,7 +1588,7 @@ const charts = {};
 function loadState(){
   try{const raw=localStorage.getItem(SK);if(!raw)return;const p=JSON.parse(raw);S.entries=p.entries||[];S.universe=p.universe||[];S.journal_import=p.journal_import||null;}catch(e){console.error(e);}
 }
-function save(){localStorage.setItem(SK,JSON.stringify(S));}
+function save(){S.meta={...(S.meta||{}),last_saved_at:new Date().toISOString()};localStorage.setItem(SK,JSON.stringify(S));}
 function exportData(){const b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`tama-research-${new Date().toISOString().split('T')[0]}.json`;a.click();toast('Exported');}
 
 // ════════════════ DATE HELPERS ════════════════
@@ -3843,6 +3846,7 @@ console.log('Portfolio Lens Patch Loaded');
       entries: arr(src.entries),
       universe: arr(src.universe),
       journal_import: arr(src.journal_import).length ? src.journal_import : (src.journal_import || null),
+      meta: (src.meta && typeof src.meta === 'object') ? src.meta : {},
       bridge: normalizeBridge((src && src.bridge) || (raw && raw.bridge) || {})
     };
   }
@@ -3856,6 +3860,7 @@ console.log('Portfolio Lens Patch Loaded');
       S.entries = ns.entries;
       S.universe = ns.universe;
       S.journal_import = ns.journal_import;
+      S.meta = ns.meta;
       S.bridge = ns.bridge;
       if(S.bridge.finance && arr(S.bridge.finance.journal).length) S.journal_import = S.journal_import || S.bridge.finance.journal;
       window.S = S;
@@ -4366,7 +4371,7 @@ console.log('Portfolio Lens Patch Loaded');
     const zone=$('analytics-import-zone');
     if(zone && !zone.dataset.lowroi){
       zone.dataset.lowroi='1';
-      zone.innerHTML=`<div class="alert a-neutral" style="margin-bottom:10px">Primary workflow: import Finance JSON from <b>Portfolio and research lens</b>. That single sync powers holdings + journal analytics.</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"><button class="btn btn-sm" onclick="importData()">Import Finance JSON via Snapshot</button></div><details class="p12-detail"><summary>Legacy manual journal import</summary><div class="import-zone" style="margin-top:10px" onclick="document.getElementById('ja-file-input').click()"><div style="font-size:24px;margin-bottom:8px"></div><div style="font-size:13px;font-weight:600;margin-bottom:4px">Manual journal-only import</div><div style="font-size:11.5px;color:var(--t3)">Fallback only · prefer Finance Snapshot</div></div><input type="file" id="ja-file-input" accept=".json" style="display:none" onchange="importJournalFile(event)"></details>`;
+      zone.innerHTML=`<div class="alert a-neutral" style="margin-bottom:10px">Primary workflow: import Finance JSON from <b>Portfolio and research lens</b>. That single sync powers holdings + journal analytics.</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"><button class="btn btn-sm" onclick="importData()">Import Finance JSON via Snapshot</button></div><details class="p12-detail"><summary>Legacy manual journal import</summary><div class="import-zone" style="margin-top:10px" onclick="document.getElementById('ja-file-input-legacy').click()"><div style="font-size:24px;margin-bottom:8px"></div><div style="font-size:13px;font-weight:600;margin-bottom:4px">Manual journal-only import</div><div style="font-size:11.5px;color:var(--t3)">Fallback only · prefer Finance Snapshot</div></div><input type="file" id="ja-file-input-legacy" accept=".json" style="display:none" onchange="importJournalFile(event)"></details>`;
     }
     // If analytics already has data, prevent the header from pushing a second import workflow.
     const reBtns=$('analytics-content')?.querySelectorAll('button');
