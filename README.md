@@ -2,7 +2,7 @@
 
 Tama OS is a local-first personal-finance decision workspace. It keeps two focused tools separate—Tama Finance and Tama Research Desk—then provides a read-only Tama OS brief that highlights data readiness, missing thesis coverage, and stale local records.
 
-The current milestone is a deterministic, read-only decision engine. Its rules and explicit non-goals are documented in [`docs/m4-deterministic-engine.md`](docs/m4-deterministic-engine.md).
+The current milestone is a deterministic, read-only decision engine. Its rules and explicit non-goals are documented in [`docs/decision-engine.md`](docs/decision-engine.md).
 
 ## OpenAI Build Week track
 
@@ -46,6 +46,16 @@ All user data is stored in the browser’s `localStorage`. Use each app’s expo
 - Finance and Research remain independent full-page applications.
 - Cross-app data exchange is explicit import/export, never automatic sync.
 - The deterministic brief surfaces data readiness rather than claiming to provide financial advice.
+
+## Repository map
+
+- `tama-os.html` — unified decision hub.
+- `tama-finance.html` — standalone Finance app.
+- `tama-research.html` — standalone Research app.
+- `js/` — shared read-only snapshot, decision, AI, and demo helpers.
+- `demo-data/` — fictional judging/demo payloads.
+- `tests/` — Node smoke and acceptance checks.
+- `docs/` — architecture, migration, implementation, debt, and submission notes.
 
 ## Built with Codex and GPT-5.6
 

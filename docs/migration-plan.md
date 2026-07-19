@@ -53,9 +53,9 @@ Objectives:
 
 Deliverables:
 
-- `architecture.md`
-- `technical-debt.md`
-- `migration-plan.md`
+- `docs/architecture.md`
+- `docs/technical-debt.md`
+- `docs/migration-plan.md`
 
 Acceptance criteria:
 
