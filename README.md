@@ -54,6 +54,7 @@ Run the test with:
 ```bash
 node tests/decision-engine.smoke.cjs
 node tests/persona-acceptance.cjs
+node tests/source-integration.smoke.cjs
 ```
 
 Use [`tests/MANUAL_BROWSER_CHECKLIST.md`](tests/MANUAL_BROWSER_CHECKLIST.md) for the final browser-level verification before recording the demo.
