@@ -338,6 +338,20 @@
     .signal-dot.blue { background: var(--blue); box-shadow: 0 0 0 5px rgba(64, 128, 232, 0.1); }
     .signal-dot.purple { background: var(--purple); box-shadow: 0 0 0 5px rgba(144, 102, 232, 0.1); }
 
+    .snapshot-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .demo-status {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
     .snapshot-status {
       display: grid;
       gap: 10px;
@@ -755,6 +769,7 @@
           <div class="hero-actions" aria-label="Application entry points">
             <a class="btn primary" href="tama-finance.html">Open Finance</a>
             <a class="btn" href="tama-research.html">Open Research</a>
+            <button class="btn" type="button" id="load-demo-hero">Load demo data</button>
             <a class="btn" href="#copilot">Ask Copilot</a>
           </div>
         </div>
@@ -774,6 +789,11 @@
               <p>
                 The brief uses the read-only snapshot only. The deterministic engine does not write back to Finance or Research; the optional copilot explains the result from curated summaries.
               </p>
+              <div class="snapshot-actions" aria-label="Snapshot actions">
+                <button class="btn primary" type="button" id="refresh-snapshot">Refresh Local Snapshot</button>
+                <button class="btn" type="button" id="load-demo-brief">Load demo data</button>
+              </div>
+              <p class="demo-status" id="demo-status" aria-live="polite">Demo data is optional. Loading it saves a local backup first.</p>
               <div class="brief-output" aria-live="polite">
                 <div class="brief-item">
                   <p class="k">Decision Readiness</p>
@@ -936,6 +956,7 @@
   <script src="js/state.js"></script>
   <script src="js/decision-engine.js"></script>
   <script src="js/ai.js"></script>
+  <script src="js/demo-data.js"></script>
   <script>
     (function () {
       'use strict';
@@ -1108,14 +1129,60 @@ Today’s Brief above still works offline. You can use “Show context prompt”
         setCopilotOutput(window.TamaAI.buildPrompt(latestSnapshot, latestBrief, currentCopilotQuestion()));
       }
 
+      function setDemoStatus(value) {
+        setText('demo-status', value);
+      }
+
+      function hasExistingLocalData() {
+        try {
+          return !!(window.localStorage.getItem(window.TamaState.FINANCE_KEY) || window.localStorage.getItem(window.TamaState.RESEARCH_KEY));
+        } catch (_) {
+          return false;
+        }
+      }
+
+      function loadDemoData() {
+        if (!window.TamaDemoData || typeof window.TamaDemoData.install !== 'function') {
+          setDemoStatus('Demo data is unavailable in this build.');
+          return;
+        }
+
+        if (hasExistingLocalData()) {
+          const confirmed = window.confirm('Load fictional demo data? This will replace current Finance and Research localStorage values after saving a local backup under tama-os-demo-backup-v1. Export personal data first if needed.');
+          if (!confirmed) {
+            setDemoStatus('Demo data load cancelled. Existing local data was not changed.');
+            return;
+          }
+        }
+
+        try {
+          const result = window.TamaDemoData.install(window.localStorage);
+          renderSnapshotStatus();
+          setDemoStatus(`Demo data loaded. Previous local values were backed up to ${result.backup_key}.`);
+          setCopilotOutput('Demo data is ready. Ask “What should I do next?” or click “Explain recommendation” with no API key for local Copilot mode.');
+        } catch (error) {
+          setDemoStatus(`Demo data could not be loaded: ${error.message}`);
+        }
+      }
+
       function bindCopilot() {
         document.getElementById('copilot-run')?.addEventListener('click', runCopilotExplanation);
         document.getElementById('copilot-show-prompt')?.addEventListener('click', showCopilotPrompt);
       }
 
+      function bindSnapshotActions() {
+        document.getElementById('refresh-snapshot')?.addEventListener('click', () => {
+          renderSnapshotStatus();
+          setDemoStatus('Local snapshot refreshed from browser storage.');
+        });
+        document.getElementById('load-demo-hero')?.addEventListener('click', loadDemoData);
+        document.getElementById('load-demo-brief')?.addEventListener('click', loadDemoData);
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
         renderSnapshotStatus();
         bindCopilot();
+        bindSnapshotActions();
       });
     })();
   </script>

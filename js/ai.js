@@ -103,14 +103,25 @@
     const safeDecision = asObject(decision);
     const readiness = safeDecision.decision_readiness || safeDecision.financial_health || {};
     const risks = Array.isArray(safeDecision.key_risks) ? safeDecision.key_risks : [];
-    const topRiskText = risks.length ? ` Main blocker: ${risks[0].title} — ${risks[0].detail}` : ' No immediate deterministic blocker was found.';
-    return [
-      `Deterministic mode answer for “${(question || DEFAULT_QUESTION).trim()}”.`,
+    const topPriority = asObject(safeDecision.top_priority);
+    const lines = [
+      `Local Copilot answer for “${(question || DEFAULT_QUESTION).trim()}”`,
+      '',
       `Readiness: ${readiness.label || 'unknown'}.`,
-      topRiskText,
+      topPriority.title ? `Top priority: ${topPriority.title}.` : 'Top priority: review Today’s Brief.',
+      topPriority.why ? `Why it matters: ${topPriority.why}` : null,
       `Next action: ${safeDecision.recommended_next_action || 'Refresh local data, then review Today’s Brief again.'}`,
-      'Enable GPT-5.6 with a session-only API key if you want a natural-language explanation of these same structured findings.',
-    ].join(' ');
+    ].filter(Boolean);
+
+    if (risks.length) {
+      lines.push('', 'Key blockers:');
+      risks.slice(0, 3).forEach((risk, index) => lines.push(`${index + 1}. ${risk.title} — ${risk.detail}`));
+    } else {
+      lines.push('', 'No immediate deterministic blockers were found. Keep Finance and Research updated before taking more risk.');
+    }
+
+    lines.push('', 'This works without an API key. GPT-5.6 is optional and only adds a more natural-language explanation of the same structured findings.');
+    return lines.join('\n');
   }
 
   async function explain(options) {

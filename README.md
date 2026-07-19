@@ -14,19 +14,31 @@ No build step or server is required.
 
 1. Download or clone this repository.
 2. Open `tama-os.html` in a modern desktop browser.
-3. Use **Open Finance** and **Open Research** to create local browser data.
-4. Return to Tama OS and refresh the page to view the read-only Today’s Brief.
-5. Optional: paste an OpenAI API key into the Copilot field to ask GPT-5.6 to explain the deterministic recommendation. The key is used for that browser session only and is not stored.
+3. Click **Load demo data** for a fictional no-setup walkthrough, or use **Open Finance** and **Open Research** to create local browser data manually.
+4. Click **Refresh Local Snapshot** to update the read-only Today’s Brief without reloading the page.
+5. Ask the Copilot “What should I do next?” with no API key to use local deterministic mode.
+6. Optional: paste an OpenAI API key into the Copilot field to ask GPT-5.6 to explain the same deterministic recommendation. The key is used for that browser session only and is not stored.
 
-All user data is stored in the browser’s `localStorage`. Use each app’s export function before clearing browser data or moving to another browser.
+All user data is stored in the browser’s `localStorage`. Use each app’s export function before clearing browser data or moving to another browser. The demo loader saves the previous Finance/Research localStorage values under `tama-os-demo-backup-v1` before writing fictional demo data.
 
 ## Judge demo path
 
-1. Open **Tama Finance** and add an account, transaction, or position.
-2. Open **Tama Research** and add a thesis or watchlist entry.
-3. Return to **Tama OS** and refresh it.
-4. Confirm the brief reports record availability, decision readiness, and any missing research coverage.
-5. Optionally export Finance JSON and import it in Research to inspect the explicit, user-controlled bridge.
+1. Open **Tama OS** and click **Load demo data**.
+2. Confirm Today’s Brief flags the intentional `TLKM` thesis gap.
+3. Ask the Copilot “What should I do next?” with no API key and show the local deterministic explanation.
+4. Optionally paste an OpenAI API key to show GPT-5.6 explaining the same structured findings.
+5. Click **Open Finance** and **Open Research** to show the standalone apps remain preserved.
+6. Optionally export Finance JSON and import it in Research to inspect the explicit, user-controlled bridge.
+
+
+## What changed during Build Week
+
+- Added `tama-os.html` as the unified local-first decision hub.
+- Added read-only snapshot helpers in `js/storage.js` and `js/state.js`.
+- Added deterministic Today’s Brief rules in `js/decision-engine.js`.
+- Added the GPT-5.6 Copilot explanation layer in `js/ai.js`, with no-key local fallback.
+- Added fictional demo data in `demo-data/` and a guarded **Load demo data** button for repeatable judging.
+- Preserved `tama-finance.html` and `tama-research.html` as standalone applications with explicit navigation back to Tama OS.
 
 ## Design and safety boundaries
 
@@ -57,6 +69,7 @@ node tests/decision-engine.smoke.cjs
 node tests/persona-acceptance.cjs
 node tests/source-integration.smoke.cjs
 node tests/ai.smoke.cjs
+node tests/demo-data.smoke.cjs
 ```
 
 Use [`tests/MANUAL_BROWSER_CHECKLIST.md`](tests/MANUAL_BROWSER_CHECKLIST.md) for the final browser-level verification before recording the demo.

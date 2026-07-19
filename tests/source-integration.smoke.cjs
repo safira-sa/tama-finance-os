@@ -20,9 +20,12 @@ function assertContains(source, needle, message) {
   const stateIndex = os.indexOf('src="js/state.js"');
   const engineIndex = os.indexOf('src="js/decision-engine.js"');
   const aiIndex = os.indexOf('src="js/ai.js"');
-  assert.ok(storageIndex > -1 && stateIndex > storageIndex && engineIndex > stateIndex && aiIndex > engineIndex, 'Shared modules must load in storage → state → decision-engine → ai order.');
+  const demoIndex = os.indexOf('src="js/demo-data.js"');
+  assert.ok(storageIndex > -1 && stateIndex > storageIndex && engineIndex > stateIndex && aiIndex > engineIndex && demoIndex > aiIndex, 'Shared modules must load in storage → state → decision-engine → ai → demo-data order.');
   assertContains(os, 'id="copilot-run"', 'Tama OS should expose the Milestone 5 copilot action.');
   assertContains(os, 'id="copilot-api-key"', 'Tama OS should keep the API key explicit and session-only.');
+  assertContains(os, 'id="refresh-snapshot"', 'Tama OS should support refreshing the read-only local snapshot without a page reload.');
+  assertContains(os, 'id="load-demo-brief"', 'Tama OS should expose a demo-data path for no-setup judging.');
 })();
 
 (function standaloneAppsExposeDecisionLoopWithoutChangingWritePaths() {

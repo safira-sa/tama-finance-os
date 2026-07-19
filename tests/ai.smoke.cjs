@@ -34,7 +34,7 @@ const decision = {
 
   const result = await ai.explain({ snapshot, decision, question: 'What should I do next?' });
   assert.equal(result.mode, 'offline');
-  assert.match(result.text, /Deterministic mode answer/);
+  assert.match(result.text, /Local Copilot answer/);
 })();
 
 (async function aiHelperCallsResponsesApiWithCuratedContext() {

@@ -1,0 +1,55 @@
+{
+  "meta": {
+    "last_saved_at": "2026-07-19T09:00:00.000Z",
+    "demo_persona": "build-week-thesis-gap"
+  },
+  "entries": [
+    {
+      "id": 601,
+      "ticker": "BBCA",
+      "market": "IDX",
+      "sector": "Banking",
+      "status": "watching",
+      "thesis_status": "intact",
+      "thesis": "High-quality bank compounder; add only if valuation and risk budget remain disciplined.",
+      "notes": "Decision-ready demo thesis for existing BBCA holding.",
+      "date_added": "2026-07-10",
+      "next_check": "2026-07-25",
+      "score": 78
+    },
+    {
+      "id": 602,
+      "ticker": "ASII",
+      "market": "IDX",
+      "sector": "Industrial",
+      "status": "expired",
+      "thesis_status": "invalid",
+      "thesis": "Old cyclical setup expired; kept as stale-demo example only.",
+      "notes": "Stale research example for demo discussion.",
+      "date_added": "2026-05-01",
+      "next_check": "2026-05-20",
+      "score": 42
+    }
+  ],
+  "universe": [
+    {
+      "id": 701,
+      "ticker": "BBCA",
+      "company": "Bank Central Asia",
+      "market": "IDX",
+      "sector": "Banking",
+      "tier": "tier1",
+      "notes": "Core quality watchlist"
+    },
+    {
+      "id": 702,
+      "ticker": "TLKM",
+      "company": "Telkom Indonesia",
+      "market": "IDX",
+      "sector": "Telecom",
+      "tier": "tier2",
+      "notes": "Needs thesis before adding risk"
+    }
+  ],
+  "journal_import": []
+}
