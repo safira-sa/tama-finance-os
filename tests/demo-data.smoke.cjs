@@ -28,6 +28,26 @@ function memoryStorage(initial = {}) {
   };
 }
 
+function materializeScenarioValue(value, freshIso, staleIso) {
+  if (value === '$FRESH_ISO') return freshIso;
+  if (value === '$STALE_ISO') return staleIso;
+  if (Array.isArray(value)) return value.map((item) => materializeScenarioValue(item, freshIso, staleIso));
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, materializeScenarioValue(item, freshIso, staleIso)]));
+  }
+  return value;
+}
+
+function decideScenario(tama, scenario, freshIso, staleIso) {
+  const records = {};
+  const financeState = materializeScenarioValue(scenario.finance_state, freshIso, staleIso);
+  const researchState = materializeScenarioValue(scenario.research_state, freshIso, staleIso);
+  if (financeState) records[tama.TamaState.FINANCE_KEY] = JSON.stringify(financeState);
+  if (researchState) records[tama.TamaState.RESEARCH_KEY] = JSON.stringify(researchState);
+  const snapshot = tama.TamaState.buildSnapshot(memoryStorage(records));
+  return tama.TamaDecisionEngine.analyze(snapshot);
+}
+
 (function demoDataInstallsBackupAndProducesThesisGapBrief() {
   const tama = loadBrowserModules();
   const storage = memoryStorage({ [tama.TamaState.FINANCE_KEY]: '{"old":true}' });
@@ -57,5 +77,41 @@ function memoryStorage(initial = {}) {
   assert.equal(JSON.stringify(finance), JSON.stringify(tama.TamaDemoData.finance));
   assert.equal(JSON.stringify(research), JSON.stringify(tama.TamaDemoData.research));
 })();
+
+
+(function scenarioCatalogCoversMajorDecisionStates() {
+  const tama = loadBrowserModules();
+  const catalog = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'demo-data/os-scenarios.json'), 'utf8'));
+  const freshIso = new Date().toISOString();
+  const staleIso = new Date(Date.now() - 45 * 86400000).toISOString();
+
+  assert.equal(catalog.schema, 'tama-os-demo-scenarios-v1');
+  assert.ok(catalog.scenarios.length >= 7, 'Scenario catalog should cover the major OS decision states.');
+
+  const requiredIds = new Set([
+    'ready_for_review',
+    'tlkm_thesis_gap',
+    'stale_finance_data',
+    'missing_research_data',
+    'emergency_fund_below_target',
+    'monthly_spending_exceeds_income',
+    'empty_browser',
+  ]);
+  catalog.scenarios.forEach((scenario) => requiredIds.delete(scenario.id));
+  assert.deepEqual([...requiredIds], [], 'Scenario catalog is missing required demo states.');
+
+  catalog.scenarios.forEach((scenario) => {
+    const decision = decideScenario(tama, scenario, freshIso, staleIso);
+    assert.equal(decision.decision_readiness.label, scenario.expected.readiness, `${scenario.id} readiness should match.`);
+    assert.equal(decision.top_priority.title, scenario.expected.top_priority, `${scenario.id} top priority should match.`);
+    if (scenario.expected.risk_detail_includes) {
+      assert.ok(
+        decision.all_key_risks.some((risk) => String(risk.detail).includes(scenario.expected.risk_detail_includes)),
+        `${scenario.id} should mention ${scenario.expected.risk_detail_includes}.`
+      );
+    }
+  });
+})();
+
 
 console.log('demo data smoke checks passed');

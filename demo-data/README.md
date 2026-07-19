@@ -29,3 +29,17 @@ If the button is not available in a browser context, import these files manually
 - `research-demo.json` in Tama Research.
 
 Always export existing personal data before loading demo data.
+
+## Scenario catalog
+
+`os-scenarios.json` is a reviewer/developer fixture catalog for checking the major decision states Tama OS can show:
+
+- ready for review;
+- the intentional `TLKM` thesis gap;
+- stale Finance data;
+- missing Research data;
+- emergency fund below target;
+- monthly spending above income; and
+- a completely empty browser.
+
+These scenarios are not installed by the **Load demo data** button. They are reference fixtures for smoke tests, QA, and future demo scripts.

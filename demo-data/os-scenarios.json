@@ -1,0 +1,154 @@
+{
+  "schema": "tama-os-demo-scenarios-v1",
+  "description": "Fictional scenario catalog for exercising the main Tama OS decision states without personal data. Timestamp placeholders are materialized by tests so the scenarios stay fresh over time.",
+  "timestamp_placeholders": {
+    "$FRESH_ISO": "Replace with the current ISO timestamp.",
+    "$STALE_ISO": "Replace with an ISO timestamp older than 30 days."
+  },
+  "scenarios": [
+    {
+      "id": "ready_for_review",
+      "label": "Ready for review",
+      "why": "Finance has money context and every open holding has a decision-ready thesis.",
+      "finance_state": {
+        "meta": { "last_saved_at": "$FRESH_ISO" },
+        "accounts": [
+          { "id": 1, "type": "cash", "buckets": ["Emergency Fund"], "initial_balance": 10000000 },
+          { "id": 2, "type": "cash", "buckets": ["Investment"], "initial_balance": 5000000 }
+        ],
+        "transactions": [],
+        "expenses": [],
+        "positions": [{ "ticker": "BBCA", "status": "open", "lots": 1, "avgbuy": 1000 }],
+        "months": { "2026-07": { "salary": 6000000, "overtimes": [], "windfalls": [], "sidejobs": [] } },
+        "config": { "parent_tax": 1000000, "internet": 200000, "transport_buf": 100000 },
+        "inv": { "cash_min": 1000000 }
+      },
+      "research_state": {
+        "meta": { "last_saved_at": "$FRESH_ISO" },
+        "entries": [{ "ticker": "BBCA", "thesis": "Decision-ready bank thesis.", "thesis_status": "intact" }],
+        "universe": [],
+        "journal_import": []
+      },
+      "expected": { "readiness": "Ready for review", "top_priority": "Review Today’s Brief before making changes" }
+    },
+    {
+      "id": "tlkm_thesis_gap",
+      "label": "Intentional TLKM thesis gap",
+      "why": "This is the main judging demo: TLKM is an open holding, but only BBCA has decision-ready research.",
+      "finance_state": {
+        "meta": { "last_saved_at": "$FRESH_ISO" },
+        "accounts": [
+          { "id": 1, "type": "cash", "buckets": ["Emergency Fund"], "initial_balance": 10000000 },
+          { "id": 2, "type": "cash", "buckets": ["Investment"], "initial_balance": 5000000 }
+        ],
+        "transactions": [],
+        "expenses": [],
+        "positions": [
+          { "ticker": "BBCA", "status": "open", "lots": 1, "avgbuy": 1000 },
+          { "ticker": "TLKM", "status": "open", "lots": 1, "avgbuy": 3000 }
+        ],
+        "months": { "2026-07": { "salary": 6000000, "overtimes": [], "windfalls": [], "sidejobs": [] } },
+        "config": { "parent_tax": 1000000, "internet": 200000, "transport_buf": 100000 },
+        "inv": { "cash_min": 1000000 }
+      },
+      "research_state": {
+        "meta": { "last_saved_at": "$FRESH_ISO" },
+        "entries": [{ "ticker": "BBCA", "thesis": "Decision-ready bank thesis.", "thesis_status": "intact" }],
+        "universe": [],
+        "journal_import": []
+      },
+      "expected": { "readiness": "Attention needed", "top_priority": "Holdings without thesis coverage", "risk_detail_includes": "TLKM" }
+    },
+    {
+      "id": "stale_finance_data",
+      "label": "Stale money data",
+      "why": "Finance has valid records, but the saved timestamp is too old for a confident decision.",
+      "finance_state": {
+        "meta": { "last_saved_at": "$STALE_ISO" },
+        "accounts": [{ "id": 1, "type": "cash", "buckets": ["Emergency Fund"], "initial_balance": 10000000 }],
+        "transactions": [],
+        "expenses": [],
+        "positions": [{ "ticker": "BBCA", "status": "open", "lots": 1, "avgbuy": 1000 }],
+        "months": { "2026-07": { "salary": 6000000, "overtimes": [], "windfalls": [], "sidejobs": [] } },
+        "config": { "parent_tax": 1000000, "internet": 200000, "transport_buf": 100000 },
+        "inv": { "cash_min": 0 }
+      },
+      "research_state": {
+        "meta": { "last_saved_at": "$FRESH_ISO" },
+        "entries": [{ "ticker": "BBCA", "thesis": "Decision-ready bank thesis.", "thesis_status": "intact" }],
+        "universe": [],
+        "journal_import": []
+      },
+      "expected": { "readiness": "Attention needed", "top_priority": "Finance data is stale" }
+    },
+    {
+      "id": "missing_research_data",
+      "label": "Missing research workspace",
+      "why": "Money data exists, but the OS cannot compare holdings to thesis coverage.",
+      "finance_state": {
+        "meta": { "last_saved_at": "$FRESH_ISO" },
+        "accounts": [{ "id": 1, "type": "cash", "buckets": ["Emergency Fund"], "initial_balance": 10000000 }],
+        "transactions": [],
+        "expenses": [],
+        "positions": [{ "ticker": "BBCA", "status": "open", "lots": 1, "avgbuy": 1000 }],
+        "months": { "2026-07": { "salary": 6000000, "overtimes": [], "windfalls": [], "sidejobs": [] } },
+        "config": { "parent_tax": 1000000, "internet": 200000, "transport_buf": 100000 },
+        "inv": { "cash_min": 0 }
+      },
+      "research_state": null,
+      "expected": { "readiness": "Review recommended", "top_priority": "Research data missing" }
+    },
+    {
+      "id": "emergency_fund_below_target",
+      "label": "Emergency fund below target",
+      "why": "Cash exists, but the emergency bucket is below the local six-month floor.",
+      "finance_state": {
+        "meta": { "last_saved_at": "$FRESH_ISO" },
+        "accounts": [{ "id": 1, "type": "cash", "buckets": ["Emergency Fund"], "initial_balance": 1000000 }],
+        "transactions": [],
+        "expenses": [],
+        "positions": [],
+        "months": { "2026-07": { "salary": 6000000, "overtimes": [], "windfalls": [], "sidejobs": [] } },
+        "config": { "parent_tax": 1000000, "internet": 200000, "transport_buf": 100000 },
+        "inv": { "cash_min": 0 }
+      },
+      "research_state": {
+        "meta": { "last_saved_at": "$FRESH_ISO" },
+        "entries": [{ "ticker": "BBCA", "thesis": "Watchlist thesis.", "thesis_status": "intact" }],
+        "universe": [],
+        "journal_import": []
+      },
+      "expected": { "readiness": "Attention needed", "top_priority": "Emergency fund below target" }
+    },
+    {
+      "id": "monthly_spending_exceeds_income",
+      "label": "Monthly spending exceeds income",
+      "why": "The latest month shows recorded expenses above recorded income, blocking new risk-taking.",
+      "finance_state": {
+        "meta": { "last_saved_at": "$FRESH_ISO" },
+        "accounts": [{ "id": 1, "type": "cash", "buckets": ["Emergency Fund"], "initial_balance": 10000000 }],
+        "transactions": [],
+        "expenses": [{ "id": 1, "month_key": "2026-07", "amt": 7000000 }],
+        "positions": [],
+        "months": { "2026-07": { "salary": 6000000, "overtimes": [], "windfalls": [], "sidejobs": [] } },
+        "config": { "parent_tax": 1000000, "internet": 200000, "transport_buf": 100000 },
+        "inv": { "cash_min": 0 }
+      },
+      "research_state": {
+        "meta": { "last_saved_at": "$FRESH_ISO" },
+        "entries": [{ "ticker": "BBCA", "thesis": "Watchlist thesis.", "thesis_status": "intact" }],
+        "universe": [],
+        "journal_import": []
+      },
+      "expected": { "readiness": "Attention needed", "top_priority": "Monthly spending exceeds recorded income" }
+    },
+    {
+      "id": "empty_browser",
+      "label": "Empty browser",
+      "why": "No local Finance or Research data exists yet, so the OS should ask for baseline setup.",
+      "finance_state": null,
+      "research_state": null,
+      "expected": { "readiness": "Needs data", "top_priority": "Finance data missing" }
+    }
+  ]
+}
