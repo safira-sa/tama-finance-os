@@ -42,4 +42,4 @@ Always export existing personal data before loading demo data.
 - monthly spending above income; and
 - a completely empty browser.
 
-These scenarios are not installed by the **Load demo data** button. Tama OS links to them from a collapsed **Demo scenarios** section so they stay available for reviewers without making the product feel like a test harness.
+These scenarios are not installed by the **Load demo data** button. Tama OS links to them from a collapsed **Demo scenarios** section so reviewers can inspect edge cases without distracting from the main Today’s Brief flow.

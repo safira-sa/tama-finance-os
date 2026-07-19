@@ -938,7 +938,7 @@
               </details>
               <details class="demo-details">
                 <summary>Demo scenarios</summary>
-                <p>Load demo data installs the polished TLKM thesis-gap walkthrough. The full scenario catalog is kept as a quiet reviewer/QA reference, not a front-and-center test harness.</p>
+                <p>Load demo data installs the polished TLKM thesis-gap walkthrough. Additional reviewer scenarios stay tucked away here so the main product remains focused on Today’s Brief.</p>
                 <ul class="demo-scenario-list">
                   <li>Ready for review</li>
                   <li>Intentional TLKM thesis gap</li>
@@ -946,11 +946,11 @@
                   <li>Missing Research Workspace data</li>
                   <li>Emergency fund or monthly spending blockers</li>
                 </ul>
-                <p><a href="demo-data/os-scenarios.json">Open scenario catalog JSON</a></p>
+                <p><a href="demo-data/os-scenarios.json" target="_blank" rel="noopener">View scenario catalog</a></p>
               </details>
               <div class="snapshot-status" aria-live="polite">
-                <div class="snapshot-row"><span>Finance data</span><span id="snapshot-finance-status">Checking…</span></div>
-                <div class="snapshot-row"><span>Research data</span><span id="snapshot-research-status">Checking…</span></div>
+                <div class="snapshot-row"><span>Money data</span><span id="snapshot-finance-status">Checking…</span></div>
+                <div class="snapshot-row"><span>Research coverage</span><span id="snapshot-research-status">Checking…</span></div>
                 <div class="snapshot-row"><span>Last updated</span><span id="snapshot-updated">Checking…</span></div>
                 <div class="snapshot-row"><span>Snapshot version</span><span id="snapshot-version">Checking…</span></div>
               </div>
@@ -959,7 +959,7 @@
 
           <div class="signal-list" aria-label="Read-only status">
             <div class="signal"><span class="signal-dot"></span> Read-only LocalStorage access only.</div>
-            <div class="signal"><span class="signal-dot blue"></span> Finance and Research remain standalone.</div>
+            <div class="signal"><span class="signal-dot blue"></span> Money and Research workspaces remain standalone.</div>
             <div class="signal"><span class="signal-dot purple"></span> GPT-5.6 Copilot is optional; deterministic mode works offline.</div>
           </div>
         </aside>
@@ -1181,7 +1181,7 @@
               `Rule action: ${topRisk.action}`,
             ]
           : [
-              'Finance and Research snapshots are readable in this browser.',
+              'Money and Research workspace snapshots are readable in this browser.',
               'No high-priority deterministic blockers were found in the current brief.',
               'Keep Money and Research updated, then refresh before making the next decision.',
             ];
@@ -1238,7 +1238,7 @@
           setText('brief-health', 'Cannot read local data');
           setText('brief-priority', 'Enable local storage to use Today’s Brief');
           setText('brief-priority-detail', error.message);
-          setText('brief-action', 'Update Money Data or Research in a browser context that allows local storage.');
+          setText('brief-action', 'Update Money Data or Fix Thesis Coverage in a browser context that allows local storage.');
           setText('finance-record-count', '0');
           setText('research-record-count', '0');
           updateResolveAction({ key_risks: [{ title: 'Finance data missing' }] });
@@ -1326,7 +1326,7 @@ Today’s Brief above still works offline. You can use “Show context prompt”
         }
 
         if (hasExistingLocalData()) {
-          const confirmed = window.confirm('Load fictional demo data? This will replace current Finance and Research localStorage values after saving a local backup under tama-os-demo-backup-v1. Export personal data first if needed.');
+          const confirmed = window.confirm('Load fictional demo data? This will replace current Money and Research workspace values after saving a local backup under tama-os-demo-backup-v1. Export personal data first if needed.');
           if (!confirmed) {
             setDemoStatus('Demo data load cancelled. Existing local data was not changed.');
             return;
@@ -1349,7 +1349,7 @@ Today’s Brief above still works offline. You can use “Show context prompt”
           return;
         }
 
-        const confirmed = window.confirm('Restore the Finance and Research values saved before the last demo load? This replaces the current demo values in this browser.');
+        const confirmed = window.confirm('Restore the Money and Research workspace values saved before the last demo load? This replaces the current demo values in this browser.');
         if (!confirmed) {
           setDemoStatus('Restore cancelled. Current local data was not changed.');
           return;

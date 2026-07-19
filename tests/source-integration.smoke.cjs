@@ -37,6 +37,10 @@ function assertContains(source, needle, message) {
   assertContains(os, 'Demo scenarios', 'Tama OS should tuck scenario fixtures behind a secondary details section.');
   assertContains(os, 'Why this recommendation?', 'Tama OS should explain why the top recommendation was selected.');
   assertContains(os, 'id="restore-demo-backup"', 'Tama OS should expose a guarded demo restore action.');
+  assertContains(os, 'target="_blank"', 'Scenario catalog should open without navigating away from the product.');
+  assertContains(os, 'View scenario catalog', 'Tama OS should present scenarios as reviewer reference, not raw JSON-first UI.');
+  assertContains(os, 'Research coverage', 'Tama OS should label Research status as coverage.');
+  assertContains(os, 'Money data', 'Tama OS should label Finance status as user-facing Money data.');
 })();
 
 (function standaloneAppsExposeDecisionLoopWithoutChangingWritePaths() {
@@ -60,6 +64,7 @@ function assertContains(source, needle, message) {
   assertContains(research, 'Money Workspace', 'Research should link to the unified Money Workspace label.');
   assertContains(research, 'secondary-actions', 'Research should move import/export noise into secondary actions.');
   assertContains(research, 'Keep thesis quality here', 'Research should explain its role in the decision loop.');
+  assertContains(research, 'Money Workspace holdings are decision-ready', 'Research decision-loop copy should use Money Workspace language.');
 })();
 
 console.log('source integration smoke checks passed');
