@@ -26,6 +26,8 @@ function assertContains(source, needle, message) {
   assertContains(os, 'id="copilot-api-key"', 'Tama OS should keep the API key explicit and session-only.');
   assertContains(os, 'id="refresh-snapshot"', 'Tama OS should support refreshing the read-only local snapshot without a page reload.');
   assertContains(os, 'id="load-demo-brief"', 'Tama OS should expose a demo-data path for no-setup judging.');
+  assertContains(os, 'assets/tama-shell.css', 'Tama OS should load the shared visual shell stylesheet.');
+  assertContains(os, 'Tama OS workspace map', 'Tama OS should display the shared workspace map.');
   assertContains(os, 'Decision Hub', 'Tama OS should expose unified Decision Hub language.');
   assertContains(os, 'Money Workspace', 'Tama OS should expose unified Money Workspace language.');
   assertContains(os, 'Research Workspace', 'Tama OS should expose unified Research Workspace language.');
@@ -42,6 +44,8 @@ function assertContains(source, needle, message) {
 
   assertContains(finance, 'href="tama-os.html"', 'Finance should provide a return path to the decision hub.');
   assertContains(finance, 'href="tama-research.html"', 'Finance should provide a path to thesis coverage.');
+  assertContains(finance, 'assets/tama-shell.css', 'Finance should load the shared visual shell stylesheet.');
+  assertContains(finance, 'Money Workspace map', 'Finance should display the shared workspace map.');
   assertContains(finance, 'Money Workspace', 'Finance should use unified Money Workspace language.');
   assertContains(finance, 'Research Workspace', 'Finance should link to the unified Research Workspace label.');
   assertContains(finance, 'secondary-actions', 'Finance should move import/export/config noise into secondary actions.');
@@ -49,6 +53,8 @@ function assertContains(source, needle, message) {
 
   assertContains(research, 'href="tama-os.html"', 'Research should provide a return path to the decision hub.');
   assertContains(research, 'href="tama-finance.html"', 'Research should provide a path to actual holdings and cash context.');
+  assertContains(research, 'assets/tama-shell.css', 'Research should load the shared visual shell stylesheet.');
+  assertContains(research, 'Research Workspace map', 'Research should display the shared workspace map.');
   assertContains(research, 'Research Workspace', 'Research should use unified Research Workspace language.');
   assertContains(research, 'Money Workspace', 'Research should link to the unified Money Workspace label.');
   assertContains(research, 'secondary-actions', 'Research should move import/export noise into secondary actions.');
