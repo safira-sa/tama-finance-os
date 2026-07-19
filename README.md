@@ -1,6 +1,6 @@
 # Tama OS
 
-Tama OS is a local-first personal-finance decision workspace. It keeps two focused tools separate—Tama Finance and Tama Research Desk—then provides a read-only Tama OS brief that highlights data readiness, missing thesis coverage, and stale local records.
+Tama OS is a local-first personal-finance decision workspace. It keeps two focused workspaces separate—Money Workspace and Research Workspace—then provides a read-only Tama OS brief that highlights data readiness, missing thesis coverage, and stale local records.
 
 The current milestone is a deterministic, read-only decision engine. Its rules and explicit non-goals are documented in [`docs/decision-engine.md`](docs/decision-engine.md).
 
@@ -14,7 +14,7 @@ No build step or server is required.
 
 1. Download or clone this repository.
 2. Open `tama-os.html` in a modern desktop browser.
-3. Click **Load demo data** for a fictional no-setup walkthrough, or use **Open Finance** and **Open Research** to create local browser data manually.
+3. Click **Load demo data** for a fictional no-setup walkthrough, or use **Update Money Data** and **Fix Thesis Coverage** to create local browser data manually.
 4. Click **Refresh Local Snapshot** to update the read-only Today’s Brief without reloading the page.
 5. Ask the Copilot “What should I do next?” with no API key to use local deterministic mode.
 6. Optional: paste an OpenAI API key into the Copilot field to ask GPT-5.6 to explain the same deterministic recommendation. The key is used for that browser session only and is not stored.
@@ -27,7 +27,7 @@ All user data is stored in the browser’s `localStorage`. Use each app’s expo
 2. Confirm Today’s Brief flags the intentional `TLKM` thesis gap.
 3. Ask the Copilot “What should I do next?” with no API key and show the local deterministic explanation.
 4. Optionally paste an OpenAI API key to show GPT-5.6 explaining the same structured findings.
-5. Click **Open Finance** and **Open Research** to show the standalone apps remain preserved.
+5. Click **Money Workspace** and **Research Workspace** to show the standalone apps remain preserved.
 6. Optionally export Finance JSON and import it in Research to inspect the explicit, user-controlled bridge.
 
 
@@ -38,14 +38,14 @@ All user data is stored in the browser’s `localStorage`. Use each app’s expo
 - Added deterministic Today’s Brief rules in `js/decision-engine.js`.
 - Added the GPT-5.6 Copilot explanation layer in `js/ai.js`, with no-key local fallback.
 - Added fictional demo data in `demo-data/` and a guarded **Load demo data** button for repeatable judging.
-- Preserved `tama-finance.html` and `tama-research.html` as standalone applications with explicit navigation back to Tama OS.
+- Preserved `tama-finance.html` and `tama-research.html` as standalone Money and Research workspaces with explicit navigation back to Tama OS.
 
 ## Design and safety boundaries
 
 - Tama OS reads local snapshots only; it makes no storage writes.
 - Finance and Research remain independent full-page applications.
 - Cross-app data exchange is explicit import/export, never automatic sync.
-- The deterministic brief surfaces data readiness rather than claiming to provide financial advice.
+- The deterministic brief surfaces data readiness rather than claiming to provide financial advice. It is educational decision support only.
 
 ## Repository map
 
@@ -56,6 +56,14 @@ All user data is stored in the browser’s `localStorage`. Use each app’s expo
 - `demo-data/` — fictional judging/demo payloads.
 - `tests/` — Node smoke and acceptance checks.
 - `docs/` — architecture, migration, implementation, debt, and submission notes.
+
+## Submission notes
+
+- **What was built during Build Week:** the Tama OS decision hub, read-only snapshot adapter, deterministic Today’s Brief, GPT-5.6 Copilot explanation layer, guarded demo loader, shared visual shell, demo scenario catalog, and smoke/acceptance tests.
+- **What existed before:** the standalone Finance and Research browser apps. They remain independently usable and are intentionally not merged into one write path yet.
+- **How GPT-5.6 is used:** GPT-5.6 explains structured deterministic findings through the Responses API when a session-only key is supplied; without a key, Tama OS shows the same recommendation through a deterministic offline explanation.
+- **How Codex was used:** Codex inspected the existing apps, implemented the new read-only OS layer and tests, and helped harden safety boundaries. Include the required `/feedback` Codex Session ID in Devpost.
+- **Demo data:** all demo payloads are fictional and non-personal; loading demo data saves a local backup under `tama-os-demo-backup-v1` before writing sample Finance/Research records.
 
 ## Built with Codex and GPT-5.6
 

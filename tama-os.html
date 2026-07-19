@@ -309,6 +309,18 @@
       line-height: 1.55;
     }
 
+    .placeholder-box .safety-note {
+      width: fit-content;
+      padding: 8px 10px;
+      border: 1px solid rgba(232, 160, 32, 0.24);
+      border-radius: 999px;
+      color: #ffe0a6;
+      background: rgba(232, 160, 32, 0.10);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
     .signal-list {
       display: grid;
       gap: 10px;
@@ -859,6 +871,7 @@
               <p>
                 The brief uses the read-only snapshot only. The deterministic engine does not write back to Finance or Research; the optional copilot explains the result from curated summaries.
               </p>
+              <p class="safety-note">Educational decision support only — not financial advice.</p>
               <div class="snapshot-actions" aria-label="Snapshot actions">
                 <button class="btn primary" type="button" id="refresh-snapshot">Refresh Local Snapshot</button>
                 <button class="btn" type="button" id="load-demo-brief">Load demo data</button>
@@ -1019,7 +1032,7 @@
 
     <footer class="footer">
       <span>Tama OS — deterministic decision readiness.</span>
-      <span>No backend · No framework · No storage writes · No state merge</span>
+      <span>No backend · No framework · No storage writes · Educational decision support only</span>
     </footer>
   </div>
 
