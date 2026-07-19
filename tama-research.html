@@ -21,6 +21,9 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 .tab-btn{padding:15px 12px;font-family:var(--sans);font-size:12.5px;color:var(--t3);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;transition:all .15s;white-space:nowrap}
 .tab-btn:hover{color:var(--t2)}.tab-btn.active{color:var(--t);border-bottom-color:var(--pur);font-weight:500}
 .topbar-r{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.os-link{display:inline-flex;align-items:center;justify-content:center;min-height:28px;padding:5px 10px;border:1px solid var(--bm);border-radius:999px;background:var(--surf2);color:var(--t2);font-size:11px;font-weight:600;text-decoration:none;white-space:nowrap;transition:all .15s}
+.os-link:hover,.os-link:focus-visible{background:var(--surf3);color:var(--t);border-color:var(--bs);outline:none}
+
 .btn{padding:6px 12px;border-radius:var(--rxs);font-size:12px;font-family:var(--sans);font-weight:500;cursor:pointer;transition:all .15s;border:1px solid var(--bm);background:var(--surf2);color:var(--t2)}
 .btn:hover{background:var(--surf3);color:var(--t);border-color:var(--bs)}
 .btn-primary{background:var(--pur);color:#fff;border-color:var(--pur)}.btn-primary:hover{background:#7a50d0}
@@ -634,6 +637,8 @@ canvas{
     <button class="tab-btn" onclick="sw('patterns',this)">Pattern Notes</button>
   </div>
   <div class="topbar-r">
+    <a class="os-link" href="tama-os.html" title="Return to Tama OS decision hub">OS Hub</a>
+    <a class="os-link" href="tama-finance.html" title="Open Tama Finance for money and positions">Finance</a>
     <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">Light mode</button>
     <button class="btn btn-sm" onclick="exportData()">Export</button>
   </div>
