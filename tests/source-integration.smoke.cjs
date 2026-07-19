@@ -26,9 +26,14 @@ function assertContains(source, needle, message) {
   assertContains(os, 'id="copilot-api-key"', 'Tama OS should keep the API key explicit and session-only.');
   assertContains(os, 'id="refresh-snapshot"', 'Tama OS should support refreshing the read-only local snapshot without a page reload.');
   assertContains(os, 'id="load-demo-brief"', 'Tama OS should expose a demo-data path for no-setup judging.');
-  assertContains(os, 'Update Money Data', 'Tama OS should use action-centric Money Workspace labels.');
-  assertContains(os, 'Fix Thesis Coverage', 'Tama OS should use action-centric Research Workspace labels.');
+  assertContains(os, 'Decision Hub', 'Tama OS should expose unified Decision Hub language.');
+  assertContains(os, 'Money Workspace', 'Tama OS should expose unified Money Workspace language.');
+  assertContains(os, 'Research Workspace', 'Tama OS should expose unified Research Workspace language.');
   assertContains(os, 'Explain Recommendation', 'Tama OS should frame Copilot as explanation, not app switching.');
+  assertContains(os, '60-second walkthrough', 'Tama OS should provide first-run demo guidance.');
+  assertContains(os, 'Step 1: Load demo.', 'The first-run walkthrough should start with demo data.');
+  assertContains(os, 'Step 2: Review TLKM gap.', 'The first-run walkthrough should direct reviewers to the intended thesis gap.');
+  assertContains(os, 'Step 3: Ask Copilot.', 'The first-run walkthrough should end with the explanation flow.');
 })();
 
 (function standaloneAppsExposeDecisionLoopWithoutChangingWritePaths() {
@@ -37,10 +42,16 @@ function assertContains(source, needle, message) {
 
   assertContains(finance, 'href="tama-os.html"', 'Finance should provide a return path to the decision hub.');
   assertContains(finance, 'href="tama-research.html"', 'Finance should provide a path to thesis coverage.');
+  assertContains(finance, 'Money Workspace', 'Finance should use unified Money Workspace language.');
+  assertContains(finance, 'Research Workspace', 'Finance should link to the unified Research Workspace label.');
+  assertContains(finance, 'secondary-actions', 'Finance should move import/export/config noise into secondary actions.');
   assertContains(finance, 'Update money and positions here', 'Finance should explain its role in the decision loop.');
 
   assertContains(research, 'href="tama-os.html"', 'Research should provide a return path to the decision hub.');
   assertContains(research, 'href="tama-finance.html"', 'Research should provide a path to actual holdings and cash context.');
+  assertContains(research, 'Research Workspace', 'Research should use unified Research Workspace language.');
+  assertContains(research, 'Money Workspace', 'Research should link to the unified Money Workspace label.');
+  assertContains(research, 'secondary-actions', 'Research should move import/export noise into secondary actions.');
   assertContains(research, 'Keep thesis quality here', 'Research should explain its role in the decision loop.');
 })();
 

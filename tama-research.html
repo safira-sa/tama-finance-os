@@ -23,6 +23,12 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 .topbar-r{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .os-link{display:inline-flex;align-items:center;justify-content:center;min-height:28px;padding:5px 10px;border:1px solid var(--bm);border-radius:999px;background:var(--surf2);color:var(--t2);font-size:11px;font-weight:600;text-decoration:none;white-space:nowrap;transition:all .15s}
 .os-link:hover,.os-link:focus-visible{background:var(--surf3);color:var(--t);border-color:var(--bs);outline:none}
+.secondary-actions{position:relative;display:inline-flex;align-items:center}
+.secondary-actions summary{list-style:none;cursor:pointer}
+.secondary-actions summary::-webkit-details-marker{display:none}
+.secondary-actions-menu{position:absolute;right:0;top:calc(100% + 8px);display:grid;gap:6px;min-width:176px;padding:8px;border:1px solid var(--bm);border-radius:14px;background:var(--surf);box-shadow:0 16px 36px rgba(0,0,0,.22);z-index:40}
+.secondary-actions-menu .btn{justify-content:flex-start;width:100%}
+.secondary-actions[open] summary{background:var(--surf3);color:var(--t);border-color:var(--bs)}
 .decision-loop{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
 .decision-loop-copy{max-width:720px;line-height:1.55}
 .decision-loop-copy strong{display:block;margin-bottom:2px;color:var(--t);font-size:12px}
@@ -634,7 +640,7 @@ canvas{
 <body>
 <div class="app">
 <div class="topbar">
-  <div class="logo"><span class="logo-dot"></span>Research Desk</div>
+  <div class="logo"><span class="logo-dot"></span>Research Workspace</div>
   <div class="tabs">
     <button class="tab-btn active" onclick="sw('overview',this)">Overview</button>
     <button class="tab-btn" onclick="sw('portfolio',this)">Portfolio Lens</button>
@@ -645,9 +651,15 @@ canvas{
   </div>
   <div class="topbar-r">
     <a class="os-link" href="tama-os.html" title="Return to the Tama OS Decision Hub">Decision Hub</a>
-    <a class="os-link" href="tama-finance.html" title="Update money data in the Money Workspace">Update Money</a>
+    <a class="os-link" href="tama-finance.html" title="Open the Money Workspace to update cash and positions">Money Workspace</a>
     <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">Light mode</button>
-    <button class="btn btn-sm" onclick="exportData()">Export</button>
+    <details class="secondary-actions">
+      <summary class="btn btn-sm" aria-label="Open secondary Research Workspace actions">More</summary>
+      <div class="secondary-actions-menu">
+        <button class="btn btn-sm" onclick="importData()">Import Finance JSON</button>
+        <button class="btn btn-primary btn-sm" onclick="exportData()">Export JSON</button>
+      </div>
+    </details>
   </div>
 </div>
 

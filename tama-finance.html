@@ -36,6 +36,12 @@ body{font-family:var(--sans);background:var(--bg);color:var(--t);font-size:14px;
 .btn-primary{background:var(--teal);color:#000;border-color:var(--teal)}.btn-primary:hover{background:var(--teal-d)}
 .fi.invalid{border-color:var(--red)!important;box-shadow:0 0 0 1px rgba(224,80,80,.12)}
 .topbar-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;background:var(--surf2);border:1px solid var(--bm);color:var(--t2);font-size:10.5px;white-space:nowrap}
+.secondary-actions{position:relative;display:inline-flex;align-items:center}
+.secondary-actions summary{list-style:none;cursor:pointer}
+.secondary-actions summary::-webkit-details-marker{display:none}
+.secondary-actions-menu{position:absolute;right:0;top:calc(100% + 8px);display:grid;gap:6px;min-width:176px;padding:8px;border:1px solid var(--bm);border-radius:14px;background:var(--surf);box-shadow:0 16px 36px rgba(0,0,0,.22);z-index:40}
+.secondary-actions-menu .btn{justify-content:flex-start;width:100%}
+.secondary-actions[open] summary{background:var(--surf3);color:var(--t);border-color:var(--bs)}
 .toast-content{display:flex;align-items:center;gap:10px}
 .toast-action{border:none;background:transparent;color:var(--teal);font-size:11px;font-weight:600;cursor:pointer;padding:0}
 .toast-action:hover{text-decoration:underline}
@@ -542,7 +548,7 @@ canvas{
 <body>
 <div class="app">
 <div class="topbar">
-  <div class="logo"><span class="logo-dot"></span>Finance OS</div>
+  <div class="logo"><span class="logo-dot"></span>Money Workspace</div>
   <div class="tabs">
     <button class="tab-btn active" onclick="sw('dashboard',this)">Dashboard</button>
     <button class="tab-btn" onclick="sw('monthly',this)">Monthly Close</button>
@@ -551,17 +557,22 @@ canvas{
     <button class="tab-btn" onclick="sw('invest',this)">Investment</button>
     <button class="tab-btn" onclick="sw('yearly',this)">Yearly</button>
     <button class="tab-btn" onclick="sw('system',this)">System</button>
-    <button class="tab-btn" onclick="sw('config',this)">Config</button>
   </div>
   <div class="topbar-r">
     <a class="os-link" href="tama-os.html" title="Return to the Tama OS Decision Hub">Decision Hub</a>
-    <a class="os-link" href="tama-research.html" title="Fix thesis coverage in the Research Workspace">Fix Thesis</a>
+    <a class="os-link" href="tama-research.html" title="Open the Research Workspace to fix thesis coverage">Research Workspace</a>
     <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">Light mode</button>
-    <span class="topbar-badge" id="backup-badge">Backup: —</span>
-    <button class="btn btn-sm" onclick="importData()">Import</button>
-    <button class="btn btn-sm" onclick="exportMonthCSV()">Month CSV</button>
-    <button class="btn btn-sm" onclick="exportYearCSV()">Year CSV</button>
-    <button class="btn btn-primary btn-sm" onclick="exportData()">Export JSON</button>
+    <details class="secondary-actions">
+      <summary class="btn btn-sm" aria-label="Open secondary Money Workspace actions">More</summary>
+      <div class="secondary-actions-menu">
+        <span class="topbar-badge" id="backup-badge">Backup: —</span>
+        <button class="btn btn-sm" onclick="sw('config',this);this.closest('details').removeAttribute('open')">Config</button>
+        <button class="btn btn-sm" onclick="importData()">Import JSON</button>
+        <button class="btn btn-sm" onclick="exportMonthCSV()">Export Month CSV</button>
+        <button class="btn btn-sm" onclick="exportYearCSV()">Export Year CSV</button>
+        <button class="btn btn-primary btn-sm" onclick="exportData()">Export JSON</button>
+      </div>
+    </details>
   </div>
 </div>
 
