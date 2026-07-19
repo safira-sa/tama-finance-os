@@ -590,6 +590,79 @@
       font-weight: 750;
     }
 
+    .copilot-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .copilot-field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .copilot-field label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .copilot-input,
+    .copilot-textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.06);
+      font: inherit;
+    }
+
+    .copilot-input {
+      min-height: 42px;
+      padding: 0 12px;
+    }
+
+    .copilot-textarea {
+      min-height: 84px;
+      padding: 12px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+
+    .copilot-input:focus,
+    .copilot-textarea:focus {
+      border-color: rgba(144, 102, 232, 0.72);
+      outline: none;
+      box-shadow: 0 0 0 4px rgba(144, 102, 232, 0.14);
+    }
+
+    .copilot-note,
+    .copilot-output {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .copilot-output {
+      min-height: 96px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.045);
+      white-space: pre-wrap;
+    }
+
+    .copilot-output strong {
+      color: var(--text);
+    }
+
+    .copilot-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
     .lockup {
       display: flex;
       flex-wrap: wrap;
@@ -662,7 +735,7 @@
         <a href="#dashboard">Dashboard</a>
         <a href="#apps">Finance</a>
         <a href="#apps">Research</a>
-        <a href="#copilot">Decision Engine</a>
+        <a href="#copilot">Copilot</a>
       </nav>
 
       <div class="top-actions">
@@ -682,7 +755,7 @@
           <div class="hero-actions" aria-label="Application entry points">
             <a class="btn primary" href="tama-finance.html">Open Finance</a>
             <a class="btn" href="tama-research.html">Open Research</a>
-            <a class="btn" href="#copilot">View Decision Engine</a>
+            <a class="btn" href="#copilot">Ask Copilot</a>
           </div>
         </div>
 
@@ -699,7 +772,7 @@
             <div class="placeholder-box">
               <strong>Today’s Brief is powered by deterministic rules.</strong>
               <p>
-                The brief uses the read-only snapshot only. It does not calculate portfolio values, call AI, or write back to Finance or Research.
+                The brief uses the read-only snapshot only. The deterministic engine does not write back to Finance or Research; the optional copilot explains the result from curated summaries.
               </p>
               <div class="brief-output" aria-live="polite">
                 <div class="brief-item">
@@ -732,7 +805,7 @@
           <div class="signal-list" aria-label="Read-only status">
             <div class="signal"><span class="signal-dot"></span> Read-only LocalStorage access only.</div>
             <div class="signal"><span class="signal-dot blue"></span> Finance and Research remain standalone.</div>
-            <div class="signal"><span class="signal-dot purple"></span> No AI, APIs, or storage writes.</div>
+            <div class="signal"><span class="signal-dot purple"></span> GPT-5.6 Copilot is optional; deterministic mode works offline.</div>
           </div>
         </aside>
       </section>
@@ -782,7 +855,7 @@
             <h2 id="placeholder-title">Decision layer, built for clarity.</h2>
           </div>
           <p>
-             The current milestone adds a deterministic decision engine. It performs no shared writes or AI reasoning; the existing app-to-app import/export bridge remains explicit.
+             The current milestone keeps deterministic decisions as the source of truth, then lets GPT-5.6 explain the result without shared writes. The existing app-to-app import/export bridge remains explicit.
           </p>
         </div>
 
@@ -810,31 +883,44 @@
       <section id="copilot" aria-labelledby="copilot-title">
         <div class="section-head">
           <div>
-            <p class="label">Deterministic decision engine</p>
-            <h2 id="copilot-title">A clear next action, with evidence.</h2>
+            <p class="label">GPT-5.6 Copilot</p>
+            <h2 id="copilot-title">Explain the next action.</h2>
           </div>
           <p>
-            Tama OS evaluates a read-only local snapshot with transparent rules. It reports what is missing, why it matters, and what to do before taking more risk.
+            The copilot explains Today’s Brief using curated local summaries and deterministic findings. It never writes to Finance or Research.
           </p>
         </div>
 
         <article class="copilot-card">
           <div>
-            <h3>Decision readiness, not a black box.</h3>
+            <h3>Reasoning on top of rules.</h3>
             <p>
-              Finance owns money and positions. Research owns thesis quality. Tama OS reads both without changing either app, then surfaces the highest-priority decision gap.
+              Finance owns money and positions. Research owns thesis quality. Tama OS reads both, runs deterministic checks locally, then GPT-5.6 can explain the result in plain language.
             </p>
-            <div class="lockup" aria-label="Decision engine status tags">
-              <span class="chip">Rule-based</span>
-              <span class="chip">Read-only</span>
+            <div class="lockup" aria-label="Copilot safety tags">
+              <span class="chip">Structured context</span>
+              <span class="chip">Session-only API key</span>
               <span class="chip">No data mutation</span>
             </div>
           </div>
 
-          <div class="chat-preview" aria-label="Decision-engine example">
-            <div class="bubble user">Can I add risk to this portfolio today?</div>
-            <div class="bubble">First, check the evidence: are your cash safeguards, monthly records, and holding theses complete?</div>
-            <div class="bubble">If a required input is missing, Tama OS tells you what to fix before you commit more capital.</div>
+          <div class="chat-preview" aria-label="GPT-5.6 copilot panel">
+            <div class="copilot-form">
+              <div class="copilot-field">
+                <label for="copilot-question">Question</label>
+                <textarea class="copilot-textarea" id="copilot-question">What should I do next?</textarea>
+              </div>
+              <div class="copilot-field">
+                <label for="copilot-api-key">OpenAI API key (optional, session only)</label>
+                <input class="copilot-input" id="copilot-api-key" type="password" autocomplete="off" placeholder="Paste a key to call GPT-5.6, or leave blank for offline mode" />
+                <p class="copilot-note">For local demos only: the key is read from this field and is not saved. Without a key, Tama OS shows a deterministic fallback and the exact curated prompt.</p>
+              </div>
+              <div class="copilot-actions">
+                <button class="btn primary" type="button" id="copilot-run">Explain recommendation</button>
+                <button class="btn" type="button" id="copilot-show-prompt">Show context prompt</button>
+              </div>
+              <div class="copilot-output" id="copilot-output" aria-live="polite">Ask “What should I do next?” after Today’s Brief loads.</div>
+            </div>
           </div>
         </article>
       </section>
@@ -849,6 +935,7 @@
   <script src="js/storage.js"></script>
   <script src="js/state.js"></script>
   <script src="js/decision-engine.js"></script>
+  <script src="js/ai.js"></script>
   <script>
     (function () {
       'use strict';
@@ -887,6 +974,9 @@
           counts.months
         );
       }
+
+      let latestSnapshot = null;
+      let latestBrief = null;
 
       function totalResearchRecords(summary) {
         if (!summary || !summary.counts) return '0';
@@ -941,6 +1031,8 @@
         try {
           snapshot = window.TamaState.buildSnapshot(window.localStorage);
           brief = window.TamaDecisionEngine.analyze(snapshot);
+          latestSnapshot = snapshot;
+          latestBrief = brief;
         } catch (error) {
           setText('snapshot-finance-status', 'Unavailable');
           setText('snapshot-research-status', 'Unavailable');
@@ -952,6 +1044,8 @@
           setText('brief-action', 'Open Finance or Research in a browser context that allows local storage.');
           setText('finance-record-count', '0');
           setText('research-record-count', '0');
+          latestSnapshot = null;
+          latestBrief = null;
           renderRisks([]);
           return;
         }
@@ -965,7 +1059,64 @@
         renderTodayBrief(brief);
       }
 
-      document.addEventListener('DOMContentLoaded', renderSnapshotStatus);
+      function setCopilotOutput(value) {
+        const output = document.getElementById('copilot-output');
+        if (output) output.textContent = value;
+      }
+
+      function currentCopilotQuestion() {
+        const question = document.getElementById('copilot-question');
+        return question && question.value.trim() ? question.value.trim() : window.TamaAI.DEFAULT_QUESTION;
+      }
+
+      function ensureCopilotContext() {
+        if (latestSnapshot && latestBrief) return true;
+        try {
+          latestSnapshot = window.TamaState.buildSnapshot(window.localStorage);
+          latestBrief = window.TamaDecisionEngine.analyze(latestSnapshot);
+          return true;
+        } catch (error) {
+          setCopilotOutput(`Copilot cannot read the local snapshot yet: ${error.message}`);
+          return false;
+        }
+      }
+
+      async function runCopilotExplanation() {
+        if (!window.TamaAI || !ensureCopilotContext()) return;
+        const apiKey = document.getElementById('copilot-api-key')?.value || '';
+        const question = currentCopilotQuestion();
+        setCopilotOutput(apiKey ? 'Calling GPT-5.6 with curated local context…' : 'No API key provided. Showing deterministic offline explanation…');
+        try {
+          const result = await window.TamaAI.explain({
+            apiKey,
+            question,
+            snapshot: latestSnapshot,
+            decision: latestBrief,
+          });
+          setCopilotOutput(`${result.mode === 'api' ? 'GPT-5.6 explanation' : 'Offline deterministic explanation'}:
+
+${result.text}`);
+        } catch (error) {
+          setCopilotOutput(`Copilot request failed: ${error.message}
+
+Today’s Brief above still works offline. You can use “Show context prompt” to copy the curated prompt into another OpenAI surface.`);
+        }
+      }
+
+      function showCopilotPrompt() {
+        if (!window.TamaAI || !ensureCopilotContext()) return;
+        setCopilotOutput(window.TamaAI.buildPrompt(latestSnapshot, latestBrief, currentCopilotQuestion()));
+      }
+
+      function bindCopilot() {
+        document.getElementById('copilot-run')?.addEventListener('click', runCopilotExplanation);
+        document.getElementById('copilot-show-prompt')?.addEventListener('click', showCopilotPrompt);
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        renderSnapshotStatus();
+        bindCopilot();
+      });
     })();
   </script>
 </body>

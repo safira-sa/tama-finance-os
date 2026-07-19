@@ -16,6 +16,7 @@ No build step or server is required.
 2. Open `tama-os.html` in a modern desktop browser.
 3. Use **Open Finance** and **Open Research** to create local browser data.
 4. Return to Tama OS and refresh the page to view the read-only Today’s Brief.
+5. Optional: paste an OpenAI API key into the Copilot field to ask GPT-5.6 to explain the deterministic recommendation. The key is used for that browser session only and is not stored.
 
 All user data is stored in the browser’s `localStorage`. Use each app’s export function before clearing browser data or moving to another browser.
 
@@ -36,7 +37,7 @@ All user data is stored in the browser’s `localStorage`. Use each app’s expo
 
 ## Built with Codex and GPT-5.6
 
-Codex was used during the hackathon to inspect the existing Finance and Research applications, implement the Tama OS read-only snapshot and deterministic decision rules, improve storage failure handling, and validate the decision engine with smoke tests. Product, UX, and safety-boundary decisions remained human-directed.
+Codex was used during the hackathon to inspect the existing Finance and Research applications, implement the Tama OS read-only snapshot and deterministic decision rules, add the GPT-5.6 copilot explanation layer, improve storage failure handling, and validate the decision engine with smoke tests. Product, UX, and safety-boundary decisions remained human-directed.
 
 For submission, include the required `/feedback` Codex Session ID from the thread where the majority of the core work was completed, plus a short walkthrough of the Codex-assisted changes in the demo video.
 
@@ -54,6 +55,8 @@ Run the test with:
 ```bash
 node tests/decision-engine.smoke.cjs
 node tests/persona-acceptance.cjs
+node tests/source-integration.smoke.cjs
+node tests/ai.smoke.cjs
 ```
 
 Use [`tests/MANUAL_BROWSER_CHECKLIST.md`](tests/MANUAL_BROWSER_CHECKLIST.md) for the final browser-level verification before recording the demo.
