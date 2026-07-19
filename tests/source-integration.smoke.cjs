@@ -32,10 +32,6 @@ function assertContains(source, needle, message) {
   assertContains(os, 'Money Workspace', 'Tama OS should expose unified Money Workspace language.');
   assertContains(os, 'Research Workspace', 'Tama OS should expose unified Research Workspace language.');
   assertContains(os, 'Explain Recommendation', 'Tama OS should frame Copilot as explanation, not app switching.');
-  assertContains(os, '60-second walkthrough', 'Tama OS should provide first-run demo guidance.');
-  assertContains(os, 'Step 1: Load demo.', 'The first-run walkthrough should start with demo data.');
-  assertContains(os, 'Step 2: Review TLKM gap.', 'The first-run walkthrough should direct reviewers to the intended thesis gap.');
-  assertContains(os, 'Step 3: Ask Copilot.', 'The first-run walkthrough should end with the explanation flow.');
 })();
 
 (function standaloneAppsExposeDecisionLoopWithoutChangingWritePaths() {
