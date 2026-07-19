@@ -554,8 +554,8 @@ canvas{
     <button class="tab-btn" onclick="sw('config',this)">Config</button>
   </div>
   <div class="topbar-r">
-    <a class="os-link" href="tama-os.html" title="Return to Tama OS decision hub">OS Hub</a>
-    <a class="os-link" href="tama-research.html" title="Open Research Desk for thesis coverage">Research</a>
+    <a class="os-link" href="tama-os.html" title="Return to the Tama OS Decision Hub">Decision Hub</a>
+    <a class="os-link" href="tama-research.html" title="Fix thesis coverage in the Research Workspace">Fix Thesis</a>
     <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">Light mode</button>
     <span class="topbar-badge" id="backup-badge">Backup: —</span>
     <button class="btn btn-sm" onclick="importData()">Import</button>
@@ -573,7 +573,7 @@ canvas{
   <div class="page-sub" id="d-date">—</div>
   <div class="alert a-teal decision-loop" aria-label="Finance decision-loop guidance">
     <div class="decision-loop-copy"><strong>Decision loop</strong>Update money and positions here. Then review Today’s Brief for the next recommended action, or add Research coverage when a holding needs a thesis.</div>
-    <div class="decision-loop-actions" aria-label="Finance decision-loop actions"><a href="tama-os.html">Review Today’s Brief</a><a href="tama-research.html">Add thesis coverage</a></div>
+    <div class="decision-loop-actions" aria-label="Finance decision-loop actions"><a href="tama-os.html">Review Brief</a><a href="tama-research.html">Fix Thesis Coverage</a></div>
   </div>
   <div class="card mb" id="command-center-card">
     <div class="ct">Command Center <span class="badge b-auto">System check</span></div>
@@ -3505,7 +3505,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     const topRows = active.sort((a,b)=>(b.score||0)-(a.score||0)).slice(0,10).map(e=>`<tr><td><strong>${esc(e.ticker)}</strong><div class="bridge-muted">${esc(e.sector||'—')} · ${esc(e.status||'—')}</div></td><td class="mono">${e.score||0}</td><td>${esc(e.entry ?? '—')} → ${esc(e.target||'—')}<div class="bridge-muted">SL ${esc(e.stop ?? '—')}</div></td><td><button class="btn btn-xs" onclick="bridgeOpenResearchIdea('${esc(e.ticker)}')">Open position</button></td></tr>`).join('');
     if($('frb-top-ideas')) $('frb-top-ideas').innerHTML = entries.length ? `<table class="bridge-table"><tr><th>Idea</th><th>Score</th><th>Plan</th><th></th></tr>${topRows || '<tr><td colspan="4" class="bridge-muted">No active ideas.</td></tr>'}</table>` : '<div class="alert a-neutral">No research layer imported yet. Export JSON from Research Lab, then import it here.</div>';
     const covRows = pos.slice(0,16).map(p=>{const e=eMap.get(tickerOf(p.ticker));return `<tr><td><strong>${esc(p.ticker)}</strong><div class="bridge-muted">${esc(p.type||'—')} · ${esc(p.thesis_status||'intact')}</div></td><td>${e?`<span class="badge b-ok">Mapped</span><div class="bridge-muted">score ${e.score||0} · ${esc(e.status)}</div>`:'<span class="badge b-warn">No research</span>'}</td><td>${e?esc((e.thesis||'').slice(0,90)):'Create/update Research Lab entry on next sync.'}</td></tr>`;}).join('');
-    if($('frb-coverage-table')) $('frb-coverage-table').innerHTML = pos.length ? `<table class="bridge-table"><tr><th>Position</th><th>Research</th><th>Note</th></tr>${covRows}</table>` : '<div class="bridge-muted">No open finance positions to map.</div>';
+    if($('frb-coverage-table')) $('frb-coverage-table').innerHTML = pos.length ? `<table class="bridge-table"><tr><th>Position</th><th>Fix Thesis</th><th>Note</th></tr>${covRows}</table>` : '<div class="bridge-muted">No open finance positions to map.</div>';
   }
   window.bridgeClearResearch = function(){
     if(!S.bridge?.research){ if(typeof toast==='function') toast('No research layer to clear'); return; }

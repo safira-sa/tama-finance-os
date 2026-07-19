@@ -26,6 +26,9 @@ function assertContains(source, needle, message) {
   assertContains(os, 'id="copilot-api-key"', 'Tama OS should keep the API key explicit and session-only.');
   assertContains(os, 'id="refresh-snapshot"', 'Tama OS should support refreshing the read-only local snapshot without a page reload.');
   assertContains(os, 'id="load-demo-brief"', 'Tama OS should expose a demo-data path for no-setup judging.');
+  assertContains(os, 'Update Money Data', 'Tama OS should use action-centric Money Workspace labels.');
+  assertContains(os, 'Fix Thesis Coverage', 'Tama OS should use action-centric Research Workspace labels.');
+  assertContains(os, 'Explain Recommendation', 'Tama OS should frame Copilot as explanation, not app switching.');
 })();
 
 (function standaloneAppsExposeDecisionLoopWithoutChangingWritePaths() {

@@ -352,6 +352,54 @@
       line-height: 1.45;
     }
 
+    .decision-loop-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .decision-step {
+      min-height: 92px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.055);
+    }
+
+    .decision-step span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      margin-bottom: 10px;
+      border-radius: 999px;
+      color: #041311;
+      background: var(--teal);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .decision-step strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+      letter-spacing: -0.015em;
+    }
+
+    .decision-step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .resolve-action {
+      width: fit-content;
+      margin-top: 12px;
+    }
+
     .snapshot-status {
       display: grid;
       gap: 10px;
@@ -730,6 +778,7 @@
       .brief-card,
       .module-card,
       .copilot-card { padding: 22px; }
+      .decision-loop-strip { grid-template-columns: 1fr; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -747,14 +796,14 @@
 
       <nav class="nav" aria-label="Main navigation">
         <a href="#dashboard">Dashboard</a>
-        <a href="#apps">Finance</a>
+        <a href="#apps">Money</a>
         <a href="#apps">Research</a>
-        <a href="#copilot">Copilot</a>
+        <a href="#copilot">Explain</a>
       </nav>
 
       <div class="top-actions">
-        <a class="btn" href="tama-research.html">Open Research</a>
-        <a class="btn primary" href="tama-finance.html">Open Finance</a>
+        <a class="btn" href="tama-research.html">Fix Thesis Coverage</a>
+        <a class="btn primary" href="tama-finance.html">Update Money Data</a>
       </div>
     </header>
 
@@ -764,13 +813,19 @@
           <p class="eyebrow"><span class="pulse"></span> Local-first Financial Operating System</p>
           <h1>Decisions, not just <span class="gradient-text">dashboards.</span></h1>
           <p class="hero-subtitle">
-            Tama OS is the new entry point for Finance and Research. It preserves both MVPs while adding a simple local Today’s Brief for the Build Week demo.
+            Know what to fix before taking more risk. Tama OS checks local money records and research coverage, then turns missing evidence into one next action.
           </p>
           <div class="hero-actions" aria-label="Application entry points">
-            <a class="btn primary" href="tama-finance.html">Open Finance</a>
-            <a class="btn" href="tama-research.html">Open Research</a>
+            <a class="btn primary" href="tama-finance.html">Update Money Data</a>
+            <a class="btn" href="tama-research.html">Fix Thesis Coverage</a>
             <button class="btn" type="button" id="load-demo-hero">Load demo data</button>
-            <a class="btn" href="#copilot">Ask Copilot</a>
+            <a class="btn" href="#copilot">Explain Recommendation</a>
+          </div>
+          <div class="decision-loop-strip" aria-label="Tama OS decision loop">
+            <div class="decision-step"><span>1</span><strong>Update Money</strong><p>Keep cash, month, and positions current.</p></div>
+            <div class="decision-step"><span>2</span><strong>Update Research</strong><p>Keep thesis coverage decision-ready.</p></div>
+            <div class="decision-step"><span>3</span><strong>Review Brief</strong><p>Find the top blocker before acting.</p></div>
+            <div class="decision-step"><span>4</span><strong>Explain / Act</strong><p>Use local Copilot mode or GPT-5.6.</p></div>
           </div>
         </div>
 
@@ -811,6 +866,7 @@
                 <div class="brief-item">
                   <p class="k">Recommended Next Action</p>
                   <p class="v" id="brief-action">Checking…</p>
+                  <a class="btn primary resolve-action" id="resolve-action" href="#copilot">Resolve Top Priority</a>
                 </div>
               </div>
               <div class="snapshot-status" aria-live="polite">
@@ -834,36 +890,36 @@
         <div class="section-head">
           <div>
             <p class="label">Applications</p>
-            <h2 id="apps-title">Two proven MVPs, one front door.</h2>
+            <h2 id="apps-title">Three workspaces, one decision loop.</h2>
           </div>
           <p>
-             The shell provides coherent navigation while keeping Finance and Research as full-page apps. Their optional import/export bridge remains explicit and user-controlled.
+             Move through the workspaces by action: update money, fix thesis coverage, review the brief, then explain or act.
           </p>
         </div>
 
         <div class="module-grid">
           <article class="module-card finance">
             <div class="module-icon" aria-hidden="true">📈</div>
-            <h3>Tama Finance</h3>
-            <p>Personal finance, accounts, monthly flow, ledger, investments, portfolio monitoring, and backup workflows.</p>
+            <h3>Money Workspace</h3>
+            <p>Update cash, accounts, monthly records, positions, and backup workflows.</p>
             <ul>
-              <li>Preserves existing Finance functionality.</li>
-              <li>Uses the current Finance page directly.</li>
+              <li>Keeps existing Finance functionality intact.</li>
+              <li>Uses the current Money Workspace page directly.</li>
               <li>No LocalStorage schema changes.</li>
             </ul>
-            <a class="btn primary" href="tama-finance.html">Open Finance</a>
+            <a class="btn primary" href="tama-finance.html">Update Money Data</a>
           </article>
 
           <article class="module-card research">
             <div class="module-icon" aria-hidden="true">🔬</div>
-            <h3>Tama Research Desk</h3>
-            <p>Investment research workspace for watchlists, scorecards, thesis tracking, technical notes, and review workflows.</p>
+            <h3>Research Workspace</h3>
+            <p>Fix thesis coverage, watchlists, scorecards, technical notes, and review workflows.</p>
             <ul>
-              <li>Preserves existing Research functionality.</li>
-              <li>Uses the current Research page directly.</li>
+              <li>Keeps existing Research functionality intact.</li>
+              <li>Uses the current Research Workspace page directly.</li>
                <li>Optional Finance snapshot import remains user-controlled.</li>
             </ul>
-            <a class="btn" href="tama-research.html">Open Research</a>
+            <a class="btn" href="tama-research.html">Fix Thesis Coverage</a>
           </article>
         </div>
       </section>
@@ -904,7 +960,7 @@
         <div class="section-head">
           <div>
             <p class="label">GPT-5.6 Copilot</p>
-            <h2 id="copilot-title">Explain the next action.</h2>
+            <h2 id="copilot-title">Explain the recommendation.</h2>
           </div>
           <p>
             The copilot explains Today’s Brief using curated local summaries and deterministic findings. It never writes to Finance or Research.
@@ -1044,6 +1100,21 @@
         setText('brief-action', brief.recommended_next_action);
         setText('priority-count', brief.top_priority ? '1' : '0');
         renderRisks(brief.key_risks);
+        updateResolveAction(brief);
+      }
+
+      function updateResolveAction(brief) {
+        const link = document.getElementById('resolve-action');
+        if (!link) return;
+        const risks = Array.isArray(brief && brief.key_risks) ? brief.key_risks : [];
+        const title = risks[0] && risks[0].title ? risks[0].title : '';
+        const target = title.includes('Research') || title.includes('thesis') || title.includes('Holdings without thesis')
+          ? { href: 'tama-research.html', label: 'Fix Thesis Coverage' }
+          : title.includes('Finance') || title.includes('Monthly') || title.includes('Emergency') || title.includes('Investment cash')
+            ? { href: 'tama-finance.html', label: 'Update Money Data' }
+            : { href: '#copilot', label: 'Explain Recommendation' };
+        link.href = target.href;
+        link.textContent = target.label;
       }
 
       function renderSnapshotStatus() {
@@ -1062,9 +1133,10 @@
           setText('brief-health', 'Cannot read local data');
           setText('brief-priority', 'Enable local storage to use Today’s Brief');
           setText('brief-priority-detail', error.message);
-          setText('brief-action', 'Open Finance or Research in a browser context that allows local storage.');
+          setText('brief-action', 'Update Money Data or Research in a browser context that allows local storage.');
           setText('finance-record-count', '0');
           setText('research-record-count', '0');
+          updateResolveAction({ key_risks: [{ title: 'Finance data missing' }] });
           latestSnapshot = null;
           latestBrief = null;
           renderRisks([]);
@@ -1159,7 +1231,7 @@ Today’s Brief above still works offline. You can use “Show context prompt”
           const result = window.TamaDemoData.install(window.localStorage);
           renderSnapshotStatus();
           setDemoStatus(`Demo data loaded. Previous local values were backed up to ${result.backup_key}.`);
-          setCopilotOutput('Demo data is ready. Ask “What should I do next?” or click “Explain recommendation” with no API key for local Copilot mode.');
+          setCopilotOutput('Demo data is ready: TLKM is intentionally missing thesis coverage. Review Today’s Brief, then click Fix Thesis Coverage or Explain Recommendation.');
         } catch (error) {
           setDemoStatus(`Demo data could not be loaded: ${error.message}`);
         }

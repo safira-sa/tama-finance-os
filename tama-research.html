@@ -644,8 +644,8 @@ canvas{
     <button class="tab-btn" onclick="sw('patterns',this)">Pattern Notes</button>
   </div>
   <div class="topbar-r">
-    <a class="os-link" href="tama-os.html" title="Return to Tama OS decision hub">OS Hub</a>
-    <a class="os-link" href="tama-finance.html" title="Open Tama Finance for money and positions">Finance</a>
+    <a class="os-link" href="tama-os.html" title="Return to the Tama OS Decision Hub">Decision Hub</a>
+    <a class="os-link" href="tama-finance.html" title="Update money data in the Money Workspace">Update Money</a>
     <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">Light mode</button>
     <button class="btn btn-sm" onclick="exportData()">Export</button>
   </div>
@@ -659,7 +659,7 @@ canvas{
   <div class="page-sub" id="ov-date">—</div>
   <div class="alert a-pur decision-loop" aria-label="Research decision-loop guidance">
     <div class="decision-loop-copy"><strong>Decision loop</strong>Keep thesis quality here. Then review Today’s Brief to check whether Finance positions are decision-ready, or update actual cash and holdings in Finance OS.</div>
-    <div class="decision-loop-actions" aria-label="Research decision-loop actions"><a href="tama-os.html">Review Today’s Brief</a><a href="tama-finance.html">Update Finance data</a></div>
+    <div class="decision-loop-actions" aria-label="Research decision-loop actions"><a href="tama-os.html">Review Brief</a><a href="tama-finance.html">Update Money Data</a></div>
   </div>
   <div class="g4 mb">
     <div class="met"><div class="ml">Watchlist active</div><div class="mv c-pur" id="ov-active">0</div><div class="ms">research entries</div></div>
@@ -4063,7 +4063,7 @@ console.log('Portfolio Lens Patch Loaded');
     if($('rfb-coverage')) $('rfb-coverage').textContent = positions.length ? `${Math.round(covered/positions.length*100)}%` : '—';
     if($('rfb-coverage-sub')) $('rfb-coverage-sub').textContent = positions.length ? `${covered}/${positions.length} positions mapped` : 'No imported positions';
     const rows = positions.sort((a,b)=>(b.market_value||b.capital||0)-(a.market_value||a.capital||0)).slice(0,20).map(p=>{const e=rMap.get(tickerOf(p.ticker));const pnl=Number(p.pnl)||0;return `<tr><td><strong>${esc(p.ticker)}</strong><div class="bridge-muted">${esc(p.type||'—')} · ${esc(p.thesis_status||'intact')}</div></td><td class="mono">${money0(p.market_value||p.capital||0, fb?.base_currency||'IDR')}<div style="color:${pnl>=0?'var(--grn)':'var(--red)'}">${pnl>=0?'+':''}${money0(pnl, fb?.base_currency||'IDR')}</div></td><td>${e?`<span class="badge b-ok">Mapped</span><div class="bridge-muted">${esc(e.status||'watching')} · score ${scoreEntry(e)}</div>`:'<span class="badge b-warn">Missing research</span>'}</td><td>${e?`<button class="btn btn-xs" onclick="openResearchModal(${js(e.id)})">Open</button>`:`<button class="btn btn-xs" onclick="bridgeQuickResearchFromHolding('${esc(p.ticker)}','${esc(p.sector||'Other')}','${esc(p.type||'')}')">Create</button>`}</td></tr>`;}).join('');
-    if($('rfb-holdings-table')) $('rfb-holdings-table').innerHTML = fb ? `<table class="bridge-table"><tr><th>Holding</th><th>Value / P&L</th><th>Research</th><th></th></tr>${rows || '<tr><td colspan="4" class="bridge-muted">No open positions imported.</td></tr>'}</table>` : '<div class="alert a-neutral">No finance layer imported yet. Export JSON from Finance OS, then import it here.</div>';
+    if($('rfb-holdings-table')) $('rfb-holdings-table').innerHTML = fb ? `<table class="bridge-table"><tr><th>Holding</th><th>Value / P&L</th><th>Fix Thesis</th><th></th></tr>${rows || '<tr><td colspan="4" class="bridge-muted">No open positions imported.</td></tr>'}</table>` : '<div class="alert a-neutral">No finance layer imported yet. Export JSON from Finance OS, then import it here.</div>';
     const closed = journal.filter(j=>String(j.trade_status||'').toLowerCase()==='closed' || Number(j.pnl)!==0);
     const pnl = closed.reduce((s,j)=>s+(Number(j.pnl)||0),0);
     const wins = closed.filter(j=>Number(j.pnl)>0).length;
