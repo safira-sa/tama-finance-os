@@ -641,7 +641,7 @@ canvas{
 <body>
 <div class="app">
 <div class="topbar">
-  <div class="logo"><span class="logo-dot"></span>Research Workspace</div>
+  <div class="logo"><span class="logo-dot"></span><span class="tama-shell-system-label">Research Workspace</span></div>
   <div class="tabs">
     <button class="tab-btn active" onclick="sw('overview',this)">Overview</button>
     <button class="tab-btn" onclick="sw('portfolio',this)">Portfolio Lens</button>
@@ -667,14 +667,15 @@ canvas{
 <section class="tama-shell-strip" aria-label="Research Workspace map">
   <div class="tama-shell-meta">
     <span class="tama-shell-eyebrow">Research Workspace</span>
-    <p>Fix thesis coverage and evidence quality before accepting portfolio risk.</p>
+    <p>Capture minimum thesis facts; Tama OS will turn gaps and stale coverage into action.</p>
   </div>
   <nav class="tama-shell-map" aria-label="Workspace switcher">
     <a class="tama-shell-pill" href="tama-os.html">Decision Hub</a>
     <span class="tama-shell-arrow">→</span>
     <a class="tama-shell-pill" href="tama-finance.html">Money Workspace</a>
     <span class="tama-shell-arrow">→</span>
-    <a class="tama-shell-pill is-active" href="tama-research.html">Research Workspace</a>
+    <a class="tama-shell-pill is-active" aria-current="page" href="tama-research.html">Research Workspace</a>
+    <a class="tama-shell-next" href="tama-os.html#dashboard">Next: Review Brief</a>
   </nav>
 </section>
 
@@ -685,7 +686,7 @@ canvas{
   <div class="page-title">Overview</div>
   <div class="page-sub" id="ov-date">—</div>
   <div class="alert a-pur decision-loop" aria-label="Research decision-loop guidance">
-    <div class="decision-loop-copy"><strong>Decision loop</strong>Keep thesis quality here. Then review Today’s Brief to check whether Money Workspace holdings are decision-ready, or update actual cash and positions in Money Workspace.</div>
+    <div class="decision-loop-copy"><strong>Decision loop</strong>Keep thesis quality here with the minimum evidence needed, then let Tama OS verify whether Money Workspace holdings are decision-ready and turn gaps into next actions.</div>
     <div class="decision-loop-actions" aria-label="Research decision-loop actions"><a href="tama-os.html">Review Brief</a><a href="tama-finance.html">Update Money Data</a></div>
   </div>
   <div class="g4 mb">

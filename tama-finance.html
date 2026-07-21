@@ -549,7 +549,7 @@ canvas{
 <body>
 <div class="app">
 <div class="topbar">
-  <div class="logo"><span class="logo-dot"></span>Money Workspace</div>
+  <div class="logo"><span class="logo-dot"></span><span class="tama-shell-system-label">Money Workspace</span></div>
   <div class="tabs">
     <button class="tab-btn active" onclick="sw('dashboard',this)">Dashboard</button>
     <button class="tab-btn" onclick="sw('monthly',this)">Monthly Close</button>
@@ -580,14 +580,15 @@ canvas{
 <section class="tama-shell-strip" aria-label="Money Workspace map">
   <div class="tama-shell-meta">
     <span class="tama-shell-eyebrow">Money Workspace</span>
-    <p>Update cash, monthly close, accounts, and positions before reviewing the brief.</p>
+    <p>Update the minimum money facts; Tama OS will derive the brief, gaps, and next action.</p>
   </div>
   <nav class="tama-shell-map" aria-label="Workspace switcher">
     <a class="tama-shell-pill" href="tama-os.html">Decision Hub</a>
     <span class="tama-shell-arrow">→</span>
-    <a class="tama-shell-pill is-active" href="tama-finance.html">Money Workspace</a>
+    <a class="tama-shell-pill is-active" aria-current="page" href="tama-finance.html">Money Workspace</a>
     <span class="tama-shell-arrow">→</span>
     <a class="tama-shell-pill" href="tama-research.html">Research Workspace</a>
+    <a class="tama-shell-next" href="tama-os.html#dashboard">Next: Review Brief</a>
   </nav>
 </section>
 
@@ -598,7 +599,7 @@ canvas{
   <div class="page-title">Dashboard</div>
   <div class="page-sub" id="d-date">—</div>
   <div class="alert a-teal decision-loop" aria-label="Finance decision-loop guidance">
-    <div class="decision-loop-copy"><strong>Decision loop</strong>Update money and positions here. Then review Today’s Brief for the next recommended action, or add Research coverage when a holding needs a thesis.</div>
+    <div class="decision-loop-copy"><strong>Decision loop</strong>Update money and positions here with the minimum facts, then let Tama OS derive the brief, missing data, and next action automatically.</div>
     <div class="decision-loop-actions" aria-label="Finance decision-loop actions"><a href="tama-os.html">Review Brief</a><a href="tama-research.html">Fix Thesis Coverage</a></div>
   </div>
   <div class="card mb" id="command-center-card">

@@ -2,9 +2,9 @@
 
 ## Goal
 
-Evolve `tama-finance.html` and `tama-research.html` into a single local-first Financial Operating System without rebuilding either application, changing frameworks, or breaking existing user data.
+Evolve Tama OS from separate local-first Finance and Research workspaces into a durable Financial Operating System with a canonical state model, deterministic recommendations, AI explanation, action history, and safe migration tooling.
 
-The migration should support the roadmap workflow:
+The workflow remains:
 
 ```text
 Financial Event
@@ -17,366 +17,293 @@ AI Reasoning
 ↓
 Recommendation
 ↓
-Journal
+Journal / Action Outcome
 ```
+
+## Updated Context
+
+The project is no longer constrained by Build Week. The previous plan optimized for a two-day demo. The updated plan optimizes for:
+
+1. Data safety.
+2. Recommendation correctness.
+3. Maintainability.
+4. UI/UX unification across Finance, Research, and OS.
+5. Long-term local-first extensibility.
+
+Speed still matters, but it should no longer override migration quality.
 
 ## Non-Goals
 
-Do not do these during the first integration pass:
+Do not start with:
 
-- Rewrite either application.
-- Introduce a frontend framework.
-- Add a backend.
-- Add authentication.
-- Replace localStorage immediately.
-- Force all data into one schema before bridge behavior is stable.
-- Build future roadmap items before Milestone 1 is approved.
+- Merging Finance and Research into one giant runtime before namespace, DOM, and migration risks are handled.
+- Adding a backend.
+- Adding authentication.
+- Removing standalone Finance or Research before migration is proven.
+- Sending raw full localStorage to AI.
+- Converting everything to a framework just to modernize.
+- Deleting old localStorage keys after first migration.
 
 ## Migration Principles
 
-1. Preserve working applications first.
-2. Consolidate through contracts, not rewrites.
-3. Keep storage migration reversible.
-4. Prefer read-only integration before shared write paths.
-5. Extract pure decision logic only when it directly enables recommendations.
-6. Keep Finance and Research independently usable until the unified app is proven.
+1. Preserve user data above all else.
+2. Make every migration reversible until proven stable.
+3. Prefer contracts and adapters before large rewrites.
+4. Make Finance, Research, and OS feel like one coherent Tama OS experience.
+5. Large changes are allowed when they improve UI/UX coherence, reduce coupling, remove patch layers, or improve decision quality.
+6. Keep deterministic logic independent from UI and AI.
+7. Keep AI explainable and non-mutating.
+8. Add tests before refactoring critical calculation paths.
+9. Preserve JSON import/export throughout the migration.
 
-## Phase 0 — Baseline Freeze
+## Phase 0 — Baseline and Safety Audit
 
-Status: documentation only.
-
-Objectives:
-
-- Treat current `tama-finance.html` and `tama-research.html` as the production baseline.
-- Document architecture, technical debt, and merge risks.
-- Do not modify runtime code.
+Status: complete enough to proceed, but should be refreshed before any destructive migration.
 
 Deliverables:
 
-- `docs/architecture.md`
-- `docs/technical-debt.md`
-- `docs/migration-plan.md`
+- Architecture review.
+- Technical-debt review.
+- Migration plan.
+- List of storage keys.
+- Manual smoke checklist.
 
 Acceptance criteria:
 
-- No application behavior changed.
-- Documentation identifies storage keys, state ownership, bridge flow, and merge risks.
+- Current app behavior is understood.
+- Existing storage keys are documented.
+- Known merge risks are documented.
 
-## Phase 1 — Integrated Shell Without State Merge
-
-Objective:
-
-Create a single user-facing Tama OS shell while preserving each app's current internal behavior.
-
-Recommended approach:
-
-- Add a top-level shell page only after approval.
-- Link or embed Finance and Research as separate modules/views.
-- Do not merge scripts into one global runtime yet.
-- Keep existing storage keys:
-  - `tama-v8`
-  - `tama-research-v1`
-- Keep JSON bridge import/export available.
-
-Why this phase matters:
-
-- It delivers user-visible consolidation quickly.
-- It avoids global namespace collisions.
-- It lets the team validate navigation and product positioning before deeper refactors.
-
-Risks:
-
-- If embedded with iframes, shared navigation and styling may be limited.
-- If combined into one DOM too early, global collisions are likely.
-
-Suggested testing:
-
-- Open Money Workspace from the shell.
-- Open Research Workspace from the shell.
-- Verify both themes, modals, charts, imports, and exports still work.
-- Verify existing localStorage data remains visible.
-
-## Phase 2 — Shared Contract Layer
+## Phase 1 — Unified Shell and UX System
 
 Objective:
 
-Define a canonical read-only Tama OS state snapshot that both apps can produce.
+Unify the user experience across `tama-os.html`, `tama-finance.html`, and `tama-research.html` before deeper state migration.
 
-Recommended contract shape:
+Deliverables:
 
-```json
-{
-  "schema": "tama-os-snapshot-v1",
-  "generated_at": "ISO_DATE",
-  "finance": {},
-  "research": {},
-  "bridge": {},
-  "data_quality": [],
-  "recommendation_inputs": {}
-}
+- Shared navigation/header pattern.
+- Shared theme tokens and common shell styling.
+- Consistent launch and return paths between OS, Finance, and Research.
+- Consistent empty states and safety copy.
+- Shared UI assets moved to `assets/` or `js/` where practical.
+
+Acceptance criteria:
+
+- All three HTML pages feel like one Tama OS product.
+- Finance and Research remain usable while UI changes land.
+- No persisted user data is deleted or rewritten by UI-only consolidation.
+
+## Phase 2 — Canonical Contracts and Test Harness for Core Logic
+
+Objective:
+
+Define stable contracts and protect recommendation correctness before deeper state refactors.
+
+Deliverables:
+
+- `tama-os-state-v1` and `tama-os-snapshot-v1` schema documentation.
+- Decision-engine, recommendation journal, AI context, and bridge contracts.
+- Unit/smoke tests for snapshot normalization.
+- Decision-engine tests for empty, partial, and complete data.
+- Tests for stale research detection and thesis coverage.
+- Tests for score bounds and recommendation shape.
+
+Acceptance criteria:
+
+- Tests can run without a browser backend.
+- Decision output remains deterministic for fixture snapshots.
+- Invalid or partial state does not crash core logic.
+
+## Phase 3 — Workspace Contracts and Namespaced App Adapters
+
+Objective:
+
+Wrap Finance and Research behavior behind explicit APIs. Workspaces may remain separate pages or later be embedded, but the contract must stay stable and collision-safe.
+
+Target APIs:
+
+```js
+window.TamaFinance = {
+  readState,
+  writeState,
+  normalizeState,
+  exportSnapshot,
+  createRestorePoint
+};
+
+window.TamaResearch = {
+  readState,
+  writeState,
+  normalizeState,
+  exportSnapshot,
+  createRestorePoint
+};
 ```
 
-Key design rule:
-
-This snapshot is not yet the write database. It is the structured input for dashboards, the decision engine, and AI reasoning.
-
-Data quality should include:
-
-- Missing FX rates.
-- Stale research imports.
-- Missing thesis for open positions.
-- Unclosed months.
-- Missing salary assumptions.
-- Empty emergency fund target data.
-- Stale portfolio prices.
-
 Acceptance criteria:
 
-- Finance can generate a snapshot.
-- Research can generate a snapshot.
-- A unified dashboard can read snapshots without mutating app state.
+- Existing pages still work during transition.
+- New OS code uses namespaced adapters where available.
+- No single page accidentally overwrites another app's globals.
+- If embedded into one runtime later, duplicate DOM IDs and globals are resolved first.
 
-## Phase 3 — Shared Utilities
+## Phase 4 — Canonical Read Integration
 
 Objective:
 
-Extract only low-risk duplicate utilities.
+Make the OS shell consume canonical snapshots rather than app-specific internals.
+
+Deliverables:
+
+- Snapshot builder using app adapters.
+- Data-quality diagnostics.
+- Unified Today's Brief based on snapshot and decision-engine output.
+
+Acceptance criteria:
+
+- Finance-only, Research-only, and combined states render safely.
+- Snapshot reads do not mutate legacy keys.
+- Dashboard remains useful with missing data.
+
+## Phase 5 — Recommendation and Journal Write Path
+
+Objective:
+
+Create the first canonical write path without touching high-risk transaction/research editing flows.
+
+Deliverables:
+
+- Recommendation journal store.
+- Accept/dismiss/snooze/note actions.
+- Engine snapshot attached to journal entries.
+- Export/import for recommendation history.
+
+Acceptance criteria:
+
+- A recommendation can become a durable action record.
+- User can see when and why an action was accepted or dismissed.
+- Existing Finance and Research state remains unchanged unless explicitly approved by the user.
+
+## Phase 6 — Reversible Unified Storage Migration
+
+Objective:
+
+Introduce `tama-os-v1` as the canonical state key.
+
+Migration flow:
+
+1. Read legacy Finance and Research keys.
+2. Build a migration preview.
+3. Show detected records, warnings, duplicates, and unsupported fields.
+4. Export backup automatically or prompt the user to download one.
+5. Create restore points.
+6. Write `tama-os-v1` only after confirmation.
+7. Keep legacy keys intact.
+
+Acceptance criteria:
+
+- Dry-run migration reports exactly what will be written.
+- Migration can be repeated idempotently.
+- Rollback path is documented and tested.
+- Standalone apps can still read their original keys.
+
+## Phase 7 — Workspace Modernization and Incremental Write Consolidation
+
+Objective:
+
+Modernize Finance and Research workflows so they feel native inside Tama OS while moving selected write workflows into canonical OS services.
+
+Recommended order:
+
+1. Recommendation outcomes.
+2. Financial memory/preferences.
+3. Goal and rule management.
+4. Link position to research thesis.
+5. Scenario/simulation records.
+6. New journal entries.
+7. Only later: transactions, account edits, positions, and full research editing.
+
+Workspace modernization can include larger HTML cleanup, module extraction, shared shell integration, and UI restructuring when it improves the Tama OS workflow and preserves recovery paths.
+
+Acceptance criteria:
+
+- Each moved write path has tests and rollback behavior.
+- Legacy app compatibility is preserved or intentionally deprecated with migration notes.
+- No broad schema rewrite happens in the same change as UI changes.
+
+## Phase 8 — IndexedDB for Durable History
+
+Objective:
+
+Use IndexedDB where LocalStorage becomes the wrong tool.
+
+Good IndexedDB candidates:
+
+- AI conversation history.
+- Recommendation journal archive.
+- Restore point archive.
+- Large research notes.
+- Imported statement/document metadata.
+- Future attachments.
+
+Acceptance criteria:
+
+- LocalStorage remains enough to boot the app.
+- IndexedDB failures degrade gracefully.
+- JSON export includes or references IndexedDB-backed data clearly.
+
+## Phase 9 — AI Copilot Hardening
+
+Objective:
+
+Make AI reasoning reliable, safe, and useful beyond demo prompts.
+
+Deliverables:
+
+- Curated AI context builder.
+- Prompt/version registry.
+- User-visible assumptions and limitations.
+- Offline fallback for every copilot surface.
+- Optional save-to-journal drafts requiring user confirmation.
+
+Acceptance criteria:
+
+- AI answers are grounded in deterministic findings.
+- AI clearly distinguishes facts, assumptions, and suggestions.
+- AI never claims to mutate user data unless a user-confirmed local write actually happened.
+
+## Phase 10 — Product Expansion
+
+Objective:
+
+Expand from Financial OS toward Personal OS only after the finance module is reliable.
 
 Candidate modules:
 
-- `js/storage.js`
-  - localStorage get/set JSON wrappers
-  - restore-point helpers
-  - safe JSON parse
-- `js/ui.js`
-  - toast
-  - modal close helper
-  - HTML escape
-- `js/date.js`
-  - today string
-  - days since/until
-  - freshness helpers
-- `js/bridge.js`
-  - bridge schema constants
-  - import/export envelope validation
-  - checksum helper
-
-Rules:
-
-- Keep original functions as wrappers during transition.
-- Do not change existing state shapes yet.
-- Avoid large patches that touch unrelated workflows.
+- Career.
+- Learning.
+- Reading.
+- Health.
+- Projects.
 
 Acceptance criteria:
 
-- Existing app behavior is unchanged.
-- Shared utilities are used by one narrow path first, preferably bridge validation or restore points.
-
-## Phase 4 — Deterministic Decision Engine
-
-Objective:
-
-Create the offline engine described in `VISION.md` before adding AI reasoning.
-
-Initial engine responsibilities:
-
-- Budget evaluation.
-- Emergency fund status.
-- Cash allocation status.
-- Portfolio allocation status.
-- Rule violations.
-- Financial health score.
-- Next recommended action candidates.
-
-Recommended module:
-
-- `js/decision-engine.js`
-
-Input:
-
-- Read-only Tama OS snapshot.
-
-Output:
-
-```json
-{
-  "generated_at": "ISO_DATE",
-  "health_score": 0,
-  "findings": [],
-  "recommendations": [],
-  "risks": [],
-  "required_data": []
-}
-```
-
-Rules:
-
-- No AI dependency.
-- No direct DOM reads.
-- No direct writes to `S`.
-- No localStorage writes.
-- Pure functions where possible.
-
-Acceptance criteria:
-
-- The engine can produce useful recommendations offline.
-- Recommendations cite the data quality issues that affect confidence.
-
-## Phase 5 — Unified Dashboard / Today’s Brief
-
-Objective:
-
-Create the first truly unified Tama OS experience.
-
-Recommended scope:
-
-- Read Finance state.
-- Read Research state.
-- Generate a Tama OS snapshot.
-- Run the deterministic decision engine.
-- Display:
-  - financial health
-  - urgent issues
-  - top recommendation
-  - missing data warnings
-  - research/position thesis gaps
-
-Why this comes before write-path unification:
-
-- It creates immediate user value.
-- It validates the shared contract.
-- It supports the product goal directly.
-
-Acceptance criteria:
-
-- A first-time user can understand what needs attention within one minute.
-- The dashboard does not break either app's existing workflows.
-
-## Phase 6 — Shared Storage Migration
-
-Objective:
-
-Move toward one common financial state only after contracts and dashboard behavior are stable.
-
-Proposed storage strategy:
-
-- Keep old keys readable:
-  - `tama-v8`
-  - `tama-research-v1`
-- Add new unified key:
-  - `tama-os-v1`
-- On first unified load:
-  1. Read old Finance state.
-  2. Read old Research state.
-  3. Build unified state.
-  4. Save a restore point.
-  5. Write `tama-os-v1`.
-  6. Do not delete old keys.
-
-Rollback strategy:
-
-- Continue exporting old app-compatible JSON until the unified app is stable.
-- Keep restore points per app and unified restore points.
-
-Acceptance criteria:
-
-- Existing users do not lose data.
-- Import/export remains available.
-- Old standalone files can still read their original keys.
-
-## Phase 7 — GPT-5.6 Copilot Integration
-
-Objective:
-
-Add AI reasoning on top of structured deterministic outputs.
-
-Rules:
-
-- The copilot never directly mutates user data.
-- The copilot receives a curated context, not raw full localStorage by default.
-- The decision engine remains the source of deterministic calculations.
-- The copilot explains recommendations, tradeoffs, and scenarios.
-
-Input context should include:
-
-- User financial snapshot.
-- Decision-engine output.
-- Data quality warnings.
-- Relevant research thesis summaries.
-- User financial memory/preferences once Milestone 5 exists.
-
-Acceptance criteria:
-
-- User can ask: “What should I do next?”
-- AI answer is grounded in deterministic findings.
-- AI clearly distinguishes facts, assumptions, and suggestions.
-
-## Phase 8 — Write-Path Consolidation
-
-Objective:
-
-Only after successful read integration, consolidate selected write workflows.
-
-Candidate first write paths:
-
-1. Journal recommendation outcome.
-2. Mark recommendation accepted/dismissed.
-3. Save financial memory preference.
-4. Link a position to a research thesis.
-
-Avoid initially:
-
-- Rewriting all transaction entry.
-- Rewriting all research entry.
-- Replacing all modals.
-- Changing account or position schemas broadly.
-
-Acceptance criteria:
-
-- A recommendation can become a journal/action record.
-- The user can see why an action was recommended.
-- Existing Finance and Research save flows remain intact.
-
-## Recommended File/Module Direction
-
-Future structure, when implementation is approved:
-
-```text
-js/
-  storage.js
-  ui.js
-  date.js
-  bridge.js
-  state.js
-  decision-engine.js
-  ai.js
-
-tama-os.html
-
-tama-finance.html
-
-tama-research.html
-```
-
-Important:
-
-- `tama-finance.html` and `tama-research.html` should remain available during migration.
-- `tama-os.html` should begin as an integration shell and dashboard, not a rewrite.
+- New modules use shared memory/rules/recommendation patterns.
+- Finance remains the reference module for local-first safety and explainable decisions.
 
 ## Risk Register
 
 | Risk | Probability | Impact | Mitigation |
 | --- | --- | --- | --- |
-| Global name collisions | High | High | Namespace before single-runtime merge |
-| Data loss during migration | Medium | Very high | Restore points, old keys retained, export before import |
-| Bridge schema drift | High | High | Document and validate bridge contracts |
-| Duplicate rendering / UI races | Medium | Medium | Hook lifecycle, avoid wrapper stacking |
-| LocalStorage quota | Medium | Medium | Keep snapshots lean, consider IndexedDB later |
-| AI overreach | Medium | High | AI reads decision output; never writes directly |
-| Refactor regression | High | High | Small changes, manual smoke tests, preserve standalone apps |
+| Data loss during migration | Medium | Very high | Dry run, restore points, old keys retained, JSON backup |
+| Incorrect recommendations | Medium | High | Deterministic tests, explainable scoring, data-quality flags |
+| Global name collisions | High | High | Namespaced adapters before single-runtime merge |
+| Schema drift | High | High | Versioned contracts and migration tests |
+| AI overreach | Medium | High | Curated context, non-mutating AI, user confirmation |
+| LocalStorage quota | Medium | Medium | IndexedDB for append-heavy data |
+| Refactor regression | High | High | Small phases, tests, standalone app preservation |
 
 ## Immediate Recommendation
 
-Stop at documentation until approval.
-
-When approved, the first implementation milestone should be a low-risk integrated shell and read-only unified snapshot, not a full state merge. This provides visible progress toward Tama OS while protecting the two working MVPs.
+The next implementation milestone should be **canonical contracts plus tests**, not a full rewrite. With Build Week pressure removed, the safest path is to strengthen correctness and migration safety before consolidating write paths.
