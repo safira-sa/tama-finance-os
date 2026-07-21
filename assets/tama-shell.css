@@ -170,3 +170,101 @@
     margin-left: 0;
   }
 }
+
+/* Milestone 1 visual unification pass: make standalone workspaces feel like Tama OS. */
+body.tama-workspace-page {
+  background:
+    radial-gradient(circle at 12% 8%, rgba(18,181,163,.18), transparent 28%),
+    radial-gradient(circle at 86% 4%, rgba(144,102,232,.18), transparent 26%),
+    radial-gradient(circle at 50% 96%, rgba(64,128,232,.12), transparent 34%),
+    var(--bg, #0c0c0a);
+}
+
+body.tama-workspace-page .app {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+body.tama-workspace-page .topbar {
+  top: 14px;
+  margin-top: 14px;
+  border: 1px solid var(--bm, rgba(255,255,255,.10));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surf, #161614) 78%, transparent);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 16px 50px rgba(0,0,0,.18);
+}
+
+body.tama-workspace-page .content {
+  width: 100%;
+  max-width: none;
+  padding-inline: 0;
+}
+
+body.tama-workspace-page .card,
+body.tama-workspace-page .met,
+body.tama-workspace-page .acc-card,
+body.tama-workspace-page .research-card,
+body.tama-workspace-page .pattern-card,
+body.tama-workspace-page .modal,
+body.tama-workspace-page .import-zone {
+  border-color: var(--bm, rgba(255,255,255,.10));
+  background: color-mix(in srgb, var(--surf, #161614) 88%, transparent);
+  box-shadow: 0 18px 52px rgba(0,0,0,.12);
+}
+
+body.tama-workspace-page .card-sm,
+body.tama-workspace-page .quality-pill,
+body.tama-workspace-page .mini-ledger,
+body.tama-workspace-page .timeline-item,
+body.tama-workspace-page .queue-item {
+  border-color: var(--b, rgba(255,255,255,.06));
+  background: color-mix(in srgb, var(--surf2, #1e1e1b) 90%, transparent);
+}
+
+body.tama-workspace-page .page-title {
+  letter-spacing: -.03em;
+}
+
+body.tama-workspace-page .page-sub {
+  max-width: 760px;
+  line-height: 1.55;
+}
+
+body.tama-workspace-page .tab-btn.active {
+  border-bottom-color: var(--teal, #12b5a3);
+}
+
+body.tama-workspace-page .btn-primary,
+body.tama-workspace-page .btn-teal {
+  color: #041311;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--teal, #12b5a3), #78efd7);
+}
+
+body.tama-workspace-page .tama-shell-strip {
+  margin-top: 18px;
+  background:
+    linear-gradient(135deg, rgba(18,181,163,.14), rgba(144,102,232,.12)),
+    color-mix(in srgb, var(--surf, #161614) 84%, transparent);
+  backdrop-filter: blur(18px);
+}
+
+body.tama-workspace-page .decision-loop {
+  border: 1px solid var(--bm, rgba(255,255,255,.10));
+  background:
+    linear-gradient(135deg, rgba(18,181,163,.12), rgba(144,102,232,.08)),
+    color-mix(in srgb, var(--surf, #161614) 90%, transparent);
+}
+
+@media (max-width: 900px) {
+  body.tama-workspace-page .topbar {
+    border-radius: 24px;
+  }
+}
+
+@media (max-width: 760px) {
+  body.tama-workspace-page .app {
+    width: min(100% - 20px, 1180px);
+  }
+}
