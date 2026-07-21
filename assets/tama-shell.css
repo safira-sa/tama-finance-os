@@ -393,3 +393,121 @@ body.tama-workspace-page .decision-loop {
     max-width: none;
   }
 }
+
+/* Milestone 1 polish: shared color system and smoother composition across workspaces. */
+[data-theme="dark"] body.tama-workspace-page {
+  --bg: #0b0f14;
+  --surf: rgba(18,25,34,.92);
+  --surf2: rgba(25,35,47,.88);
+  --surf3: rgba(33,45,60,.90);
+  --b: rgba(255,255,255,.08);
+  --bm: rgba(255,255,255,.12);
+  --bs: rgba(255,255,255,.20);
+  --t: #f4f7fb;
+  --t2: #93a4b8;
+  --t3: #617084;
+  --teal: #12b5a3;
+  --teal-b: rgba(18,181,163,.14);
+  --pur: #12b5a3;
+  --pur-b: rgba(18,181,163,.14);
+}
+
+[data-theme="light"] body.tama-workspace-page {
+  --bg: #f7f9fc;
+  --surf: rgba(255,255,255,.94);
+  --surf2: rgba(241,245,249,.92);
+  --surf3: rgba(226,232,240,.92);
+  --b: rgba(15,23,42,.08);
+  --bm: rgba(15,23,42,.12);
+  --bs: rgba(15,23,42,.20);
+  --t: #0f172a;
+  --t2: #475569;
+  --t3: #8290a3;
+  --teal: #0f9f90;
+  --teal-b: rgba(15,159,144,.12);
+  --pur: #0f9f90;
+  --pur-b: rgba(15,159,144,.12);
+}
+
+body.tama-workspace-page .logo-dot {
+  background: var(--teal, #12b5a3) !important;
+  box-shadow: 0 0 0 6px rgba(18,181,163,.10);
+}
+
+body.tama-workspace-page .topbar,
+body.tama-workspace-page .tama-shell-strip,
+body.tama-workspace-page .tama-workspace-hero,
+body.tama-workspace-page .card,
+body.tama-workspace-page .met,
+body.tama-workspace-page .research-card,
+body.tama-workspace-page .acc-card {
+  transition: border-color .18s ease, background .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+
+body.tama-workspace-page .topbar:hover,
+body.tama-workspace-page .tama-shell-strip:hover,
+body.tama-workspace-page .tama-workspace-hero:hover {
+  border-color: var(--bs, rgba(255,255,255,.20));
+}
+
+body.tama-workspace-page .tama-shell-strip {
+  width: 100%;
+  border-radius: 24px;
+}
+
+body.tama-workspace-page .tama-shell-strip + .tama-workspace-hero {
+  margin-top: 12px;
+}
+
+body.tama-workspace-page .tama-workspace-hero {
+  overflow: hidden;
+}
+
+body.tama-workspace-page .tama-workspace-hero::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255,255,255,.12), transparent 34%, rgba(18,181,163,.10));
+  opacity: .7;
+}
+
+body.tama-workspace-page .tama-workspace-hero > * {
+  position: relative;
+  z-index: 1;
+}
+
+body.tama-workspace-page .tama-workspace-hero-actions a,
+body.tama-workspace-page .tama-workspace-hero-actions button,
+body.tama-workspace-page .tama-shell-pill,
+body.tama-workspace-page .os-link {
+  transition: transform .18s ease, border-color .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
+}
+
+body.tama-workspace-page .tama-workspace-hero-actions a:not(.primary),
+body.tama-workspace-page .tama-workspace-hero-actions button:not(.primary) {
+  background: rgba(255,255,255,.055);
+}
+
+body.tama-workspace-page .badge.b-pur,
+body.tama-workspace-page .a-pur,
+body.tama-workspace-page .tier2,
+body.tama-workspace-page .word-chip.high {
+  background: var(--teal-b, rgba(18,181,163,.14));
+  color: var(--teal, #12b5a3);
+  border-color: rgba(18,181,163,.24);
+}
+
+body.tama-workspace-page .fi:focus,
+body.tama-workspace-page .ta:focus {
+  border-color: var(--teal, #12b5a3) !important;
+  box-shadow: 0 0 0 3px rgba(18,181,163,.10);
+}
+
+body.tama-workspace-page .import-zone:hover {
+  border-color: var(--teal, #12b5a3) !important;
+}
+
+body.tama-workspace-page .tama-workspace-hero {
+  position: relative;
+}
