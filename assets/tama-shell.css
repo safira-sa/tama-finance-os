@@ -331,3 +331,116 @@ body.tama-workspace-page .topbar-r {
     overflow-x: auto;
   }
 }
+
+/* Micro-polish: consistent spacing, type rhythm, and calmer reading density. */
+body.tama-workspace-page {
+  text-rendering: optimizeLegibility;
+}
+
+body.tama-workspace-page .topbar {
+  column-gap: 12px;
+}
+
+body.tama-workspace-page .tabs {
+  gap: 2px;
+}
+
+body.tama-workspace-page .tab-btn {
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: .01em;
+}
+
+body.tama-workspace-page .tab-btn.active {
+  font-weight: 750;
+}
+
+body.tama-workspace-page .btn,
+body.tama-workspace-page .theme-btn,
+body.tama-workspace-page .os-link,
+body.tama-workspace-page .tama-shell-pill,
+body.tama-workspace-page .tama-shell-next,
+body.tama-workspace-page .secondary-actions summary {
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+body.tama-workspace-page .logo {
+  font-size: 14px;
+  letter-spacing: -.01em;
+}
+
+body.tama-workspace-page .tama-shell-system-label::before,
+body.tama-workspace-page .tama-shell-eyebrow,
+body.tama-workspace-page .ct,
+body.tama-workspace-page .sl {
+  letter-spacing: .08em;
+}
+
+body.tama-workspace-page .tama-shell-eyebrow,
+body.tama-workspace-page .ct,
+body.tama-workspace-page .sl {
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+body.tama-workspace-page .page-title {
+  margin-bottom: 5px;
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+body.tama-workspace-page .page-sub,
+body.tama-workspace-page .tama-shell-meta p,
+body.tama-workspace-page .decision-loop-copy,
+body.tama-workspace-page .hint,
+body.tama-workspace-page .ms,
+body.tama-workspace-page .ik {
+  line-height: 1.6;
+}
+
+body.tama-workspace-page .card {
+  padding: 18px;
+}
+
+body.tama-workspace-page .card-sm,
+body.tama-workspace-page .met,
+body.tama-workspace-page .quality-pill {
+  padding: 13px 14px;
+}
+
+body.tama-workspace-page .alert,
+body.tama-workspace-page .decision-loop,
+body.tama-workspace-page .queue-item,
+body.tama-workspace-page .timeline-item {
+  line-height: 1.55;
+}
+
+body.tama-workspace-page .badge,
+body.tama-workspace-page .tag,
+body.tama-workspace-page .topbar-badge {
+  font-size: 10.5px;
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+body.tama-workspace-page .fi,
+body.tama-workspace-page .ta {
+  min-height: 34px;
+  font-size: 12.5px;
+  line-height: 1.35;
+}
+
+body.tama-workspace-page .tbl th {
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: .06em;
+}
+
+body.tama-workspace-page .tbl td {
+  line-height: 1.5;
+}
