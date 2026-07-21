@@ -268,3 +268,128 @@ body.tama-workspace-page .decision-loop {
     width: min(100% - 20px, 1180px);
   }
 }
+
+/* Milestone 1 completion: shared workspace hero so Finance/Research visually match the OS entry. */
+.tama-workspace-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  margin: 18px 0 4px;
+  padding: clamp(22px, 4vw, 34px);
+  border: 1px solid var(--bm, rgba(255,255,255,.10));
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(18,181,163,.18), transparent 34%),
+    radial-gradient(circle at 92% 12%, rgba(144,102,232,.18), transparent 30%),
+    color-mix(in srgb, var(--surf, #161614) 86%, transparent);
+  box-shadow: 0 28px 80px rgba(0,0,0,.20);
+  backdrop-filter: blur(18px);
+}
+
+.tama-workspace-hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: var(--teal, #12b5a3);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.tama-workspace-hero-kicker::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--teal, #12b5a3);
+  box-shadow: 0 0 0 6px rgba(18,181,163,.12);
+}
+
+.tama-workspace-hero h1 {
+  max-width: 780px;
+  margin: 0;
+  font-family: var(--dsp, Inter, ui-sans-serif, system-ui, sans-serif);
+  font-size: clamp(30px, 5vw, 54px);
+  line-height: .98;
+  letter-spacing: -.06em;
+  color: var(--t, var(--text, #f4f7fb));
+}
+
+.tama-workspace-hero p {
+  max-width: 720px;
+  margin: 12px 0 0;
+  color: var(--t2, var(--muted, #93a4b8));
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.tama-workspace-hero-actions {
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  max-width: 380px;
+}
+
+.tama-workspace-hero-actions a,
+.tama-workspace-hero-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 15px;
+  border: 1px solid var(--bm, rgba(255,255,255,.10));
+  border-radius: 999px;
+  background: rgba(255,255,255,.06);
+  color: var(--t, var(--text, #f4f7fb));
+  font: inherit;
+  font-size: 12px;
+  font-weight: 900;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.tama-workspace-hero-actions .primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--teal, #12b5a3), #78efd7);
+  color: #041311;
+  box-shadow: 0 12px 28px rgba(18,181,163,.24);
+}
+
+.tama-workspace-hero-actions a:hover,
+.tama-workspace-hero-actions button:hover,
+.tama-workspace-hero-actions a:focus-visible,
+.tama-workspace-hero-actions button:focus-visible {
+  border-color: var(--teal, #12b5a3);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.tama-workspace-safety {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 8px 11px;
+  border: 1px solid rgba(232,160,32,.22);
+  border-radius: 999px;
+  background: rgba(232,160,32,.10);
+  color: var(--amb, #e8a020);
+  font-size: 11.5px;
+  font-weight: 800;
+}
+
+@media (max-width: 860px) {
+  .tama-workspace-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .tama-workspace-hero-actions {
+    justify-content: flex-start;
+    max-width: none;
+  }
+}
