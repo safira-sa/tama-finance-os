@@ -192,11 +192,11 @@ Recommended future mitigation:
 
 ## Debt That Should Not Be Fixed Yet
 
-During Build Week, avoid spending time on:
+Debt that was intentionally postponed during Build Week can now be addressed, but still in product-value order. Do not spend time on:
 
 - Framework migration.
 - Build tooling.
-- Full component rewrite.
+- Full component rewrite without a clear Tama OS user benefit. UI/UX consolidation across the existing HTML pages is allowed when it makes the product feel unified.
 - Full TypeScript conversion.
 - Backend or cloud sync.
 - Authentication.
@@ -204,11 +204,11 @@ During Build Week, avoid spending time on:
 - RAG.
 - Full IndexedDB migration.
 
-These may be valuable later, but they do not directly improve the immediate integrated demo.
+These may be valuable later, but they should be approved only when they unlock user value or reduce proven maintenance risk.
 
-## Debt That Supports The Product Goal
+## Debt That Supports The Product Goal Now
 
-The following cleanup directly supports “What should I do next?” and should be prioritized when coding begins:
+The following cleanup directly supports “What should I do next?” and should be prioritized next:
 
 1. Define a shared financial state snapshot for the decision engine.
 2. Extract deterministic calculations from UI code.
@@ -216,3 +216,46 @@ The following cleanup directly supports “What should I do next?” and should 
 4. Add freshness and data-quality flags to AI/briefing context.
 5. Preserve journal/action history so recommendations can be explained.
 
+
+
+## Post-Build-Week Debt Strategy
+
+Because the project is no longer operating under a two-day demo constraint, the debt strategy should move from "minimum viable integration" to "safe foundation for long-term product development." Large changes are acceptable when they unify the UI/UX across Finance, Research, and OS, reduce coupling, remove fragile patch layers, or improve the Tama OS decision workflow. The priority is still not elegance for its own sake; the priority is protecting local user data while making recommendations more reliable.
+
+### Recommended Sequence
+
+1. **Unified shell first** — make Finance, Research, and OS share navigation, visual language, and action patterns.
+2. **Contract baseline** — define `tama-os-state-v1`, bridge envelopes, and AI context schemas before data migration.
+3. **Tests around decisions** — add tests for decision-engine scoring, recommendation ranking, stale-data detection, and snapshot normalization.
+4. **Workspace contracts** — expose explicit APIs back to Tama OS whether workspaces remain separate files or become embedded later.
+5. **Namespacing** — expose intentional globals only, such as `window.TamaFinance` and `window.TamaResearch`.
+6. **Migration tooling** — build dry-run migration, restore points, export-before-migrate, and rollback checks before writing `tama-os-v1`.
+7. **Hook lifecycle** — replace monkey-patches with registered hooks after adapters exist.
+8. **Durable history** — move append-heavy recommendation journals, AI conversations, and restore archives toward IndexedDB when volume justifies it.
+
+### Debt Priority Matrix
+
+| Priority | Debt | Why it matters now | First safe step |
+| --- | --- | --- | --- |
+| P0 | Data-loss risk | Local-first trust depends on recoverability | Add migration dry-run and restore-point checks |
+| P0 | Decision correctness | Recommendations are the product | Expand deterministic engine tests |
+| P1 | Schema drift | AI and dashboards need stable inputs | Publish `tama-os-state-v1` contract |
+| P1 | Global collisions | Blocks safe OS coordination or future embedding | Namespace public APIs and resolve duplicate DOM IDs |
+| P1 | Patch accumulation | Makes behavior hard to reason about | Add lifecycle hook registry |
+| P2 | LocalStorage scale | May limit journals/research/history | Use IndexedDB for append-heavy stores |
+| P1 | UI fragmentation | Makes Tama OS feel like separate apps | Shared shell, theme tokens, and common navigation |
+| P2 | UI duplication | Slows iteration | Extract small UI utilities after behavior is tested |
+| P3 | Framework absence | Not a blocker today | Reassess only if vanilla UI becomes sustained drag |
+
+### Updated Non-Priorities
+
+The following should still not be first moves unless a concrete blocker appears:
+
+- Full framework migration.
+- Full TypeScript conversion.
+- Backend/cloud sync.
+- Authentication.
+- Multi-agent architecture.
+- RAG over external documents.
+
+They are not rejected forever; they are deferred behind local correctness, schema stability, and user-visible decision quality.

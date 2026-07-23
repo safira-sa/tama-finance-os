@@ -546,18 +546,18 @@ canvas{
 </style>
 
 </head>
-<body>
+<body class="tama-workspace-page">
 <div class="app">
 <div class="topbar">
-  <div class="logo"><span class="logo-dot"></span>Money Workspace</div>
+  <div class="logo"><span class="logo-dot"></span><span class="tama-shell-system-label">Money Workspace</span></div>
   <div class="tabs">
     <button class="tab-btn active" onclick="sw('dashboard',this)">Dashboard</button>
-    <button class="tab-btn" onclick="sw('monthly',this)">Monthly Close</button>
-    <button class="tab-btn" onclick="sw('transactions',this)">Ledger</button>
+    <button class="tab-btn" onclick="sw('monthly',this)">Close Month</button>
+    <button class="tab-btn" onclick="sw('transactions',this)">Log Expense</button>
     <button class="tab-btn" onclick="sw('accounts',this)">Accounts</button>
-    <button class="tab-btn" onclick="sw('invest',this)">Investment</button>
-    <button class="tab-btn" onclick="sw('yearly',this)">Yearly</button>
-    <button class="tab-btn" onclick="sw('system',this)">System</button>
+    <button class="tab-btn" onclick="sw('invest',this)">Holdings</button>
+    <button class="tab-btn" onclick="sw('yearly',this)">Year Review</button>
+    <button class="tab-btn" onclick="sw('system',this)">Data Safety</button>
   </div>
   <div class="topbar-r">
     <a class="os-link" href="tama-os.html" title="Return to the Tama OS Decision Hub">Decision Hub</a>
@@ -580,16 +580,18 @@ canvas{
 <section class="tama-shell-strip" aria-label="Money Workspace map">
   <div class="tama-shell-meta">
     <span class="tama-shell-eyebrow">Money Workspace</span>
-    <p>Update cash, monthly close, accounts, and positions before reviewing the brief.</p>
+    <p>Update the minimum money facts; Tama OS will derive the brief, gaps, and next action.</p>
   </div>
   <nav class="tama-shell-map" aria-label="Workspace switcher">
     <a class="tama-shell-pill" href="tama-os.html">Decision Hub</a>
     <span class="tama-shell-arrow">→</span>
-    <a class="tama-shell-pill is-active" href="tama-finance.html">Money Workspace</a>
+    <a class="tama-shell-pill is-active" aria-current="page" href="tama-finance.html">Money Workspace</a>
     <span class="tama-shell-arrow">→</span>
     <a class="tama-shell-pill" href="tama-research.html">Research Workspace</a>
+    <a class="tama-shell-next" href="tama-os.html#dashboard">Next: Review Brief</a>
   </nav>
 </section>
+
 
 <div class="content">
 
@@ -598,7 +600,7 @@ canvas{
   <div class="page-title">Dashboard</div>
   <div class="page-sub" id="d-date">—</div>
   <div class="alert a-teal decision-loop" aria-label="Finance decision-loop guidance">
-    <div class="decision-loop-copy"><strong>Decision loop</strong>Update money and positions here. Then review Today’s Brief for the next recommended action, or add Research coverage when a holding needs a thesis.</div>
+    <div class="decision-loop-copy"><strong>Decision loop</strong>Update money and positions here with the minimum facts, then let Tama OS derive the brief, missing data, and next action automatically.</div>
     <div class="decision-loop-actions" aria-label="Finance decision-loop actions"><a href="tama-os.html">Review Brief</a><a href="tama-research.html">Fix Thesis Coverage</a></div>
   </div>
   <div class="card mb" id="command-center-card">
@@ -633,7 +635,7 @@ canvas{
           <text x="54" y="63" text-anchor="middle" font-size="11" fill="var(--t)" font-family="var(--mono)" font-weight="500" id="r-ctr">—</text>
         </svg>
         <div style="flex:1">
-          <div class="ir"><span class="ik"><span class="dot" style="background:#12B5A3"></span>Investment</span><span class="iv c-teal" id="lg-inv">—</span></div>
+          <div class="ir"><span class="ik"><span class="dot" style="background:#12B5A3"></span>Holdings</span><span class="iv c-teal" id="lg-inv">—</span></div>
           <div class="ir"><span class="ik"><span class="dot" style="background:#4080E8"></span>Allowance</span><span class="iv c-blu" id="lg-allow">—</span></div>
           <div class="ir"><span class="ik"><span class="dot" style="background:#9066E8"></span>Personal development</span><span class="iv c-pur" id="lg-dev">—</span></div>
           <div class="ir"><span class="ik"><span class="dot" style="background:#E8A020"></span>Sinking funds</span><span class="iv c-amb" id="lg-sink">—</span></div>
@@ -773,7 +775,7 @@ canvas{
 <!-- ═══ YEARLY ═══ -->
 <div class="panel" id="panel-yearly">
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px;flex-wrap:wrap">
-    <div class="page-title">Yearly</div>
+    <div class="page-title">Year Review</div>
     <div style="display:flex;align-items:center;gap:6px">
       <button class="btn btn-sm" onclick="navYear(-1)">‹</button>
       <select id="yr-year-sel" class="fi ft" style="width:100px;padding:5px 8px;font-size:13px" onchange="uiState.yearSel=this.value;rYearly()"></select>
@@ -814,7 +816,7 @@ canvas{
         <div class="field" id="txn-to-wrap" style="display:none"><label>To account</label><select id="txn-to" class="fi ft" onchange="txnToChange()"></select><div class="hint">Used only for Transfer</div></div>
       </div>
       <div class="g2" style="gap:10px;margin-bottom:0">
-        <div class="field" id="txn-bucket-wrap"><label>Bucket</label><select id="txn-bucket" class="fi ft"><option>Investment</option><option>Emergency Fund</option><option>Sinking Fund</option><option value="Personal Dev">Personal development</option><option>Allowance</option><option>ME</option><option>Transfer</option></select></div>
+        <div class="field" id="txn-bucket-wrap"><label>Bucket</label><select id="txn-bucket" class="fi ft"><option value="Investment">Holdings</option><option>Emergency Fund</option><option>Sinking Fund</option><option value="Personal Dev">Personal development</option><option>Allowance</option><option>ME</option><option>Transfer</option></select></div>
         <div class="field" id="txn-fee-wrap" style="display:none"><label>Admin fee / bank fee</label><input type="number" id="txn-fee" class="fi" placeholder="0" min="0"><div class="hint">Deducted from source account only.</div></div>
       </div>
       <div class="field" id="txn-sink-wrap" style="display:none"><label>Sinking fund target</label><select id="txn-sink-id" class="fi ft"></select><div class="hint">Auto-fills from the source account when possible.</div></div>
@@ -827,7 +829,7 @@ canvas{
       <div class="card" style="margin-bottom:0">
         <div class="ct">Bucket totals</div>
         <div class="ir"><span class="ik c-teal">Emergency Fund</span><span class="iv c-teal" id="bt-ef">—</span></div>
-        <div class="ir"><span class="ik c-teal">Investment</span><span class="iv c-teal" id="bt-inv">—</span></div>
+        <div class="ir"><span class="ik c-teal">Holdings</span><span class="iv c-teal" id="bt-inv">—</span></div>
         <div class="ir"><span class="ik c-amb">Sinking funds</span><span class="iv c-amb" id="bt-sink">—</span></div>
         <div class="ir"><span class="ik c-pur">Personal development</span><span class="iv c-pur" id="bt-dev">—</span></div>
         <div class="ir"><span class="ik" style="font-weight:500">Net Worth</span><span class="iv" id="bt-nw" style="font-size:13px;font-weight:600">—</span></div>
@@ -840,7 +842,7 @@ canvas{
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:flex-end;font-size:12px;">
         <select id="txn-filter-month" class="fi ft" style="padding:5px 10px;font-size:12px;width:auto;min-width:120px" onchange="uiState.txnMonthFilter=this.value;uiState.txnPage=0;rTxn()"></select>
         <select id="txn-filter-acc" class="fi ft" style="padding:5px 10px;font-size:12px;width:auto;min-width:120px" onchange="uiState.txnPage=0;rTxn()"><option value="">All accounts</option></select>
-        <select id="txn-filter-bkt" class="fi ft" style="padding:5px 10px;font-size:12px;width:auto;min-width:120px" onchange="uiState.txnPage=0;rTxn()"><option value="">All buckets</option><option>Investment</option><option>Emergency Fund</option><option>Sinking Fund</option><option value="Personal Dev">Personal development</option><option>Allowance</option><option>Transfer</option></select>
+        <select id="txn-filter-bkt" class="fi ft" style="padding:5px 10px;font-size:12px;width:auto;min-width:120px" onchange="uiState.txnPage=0;rTxn()"><option value="">All buckets</option><option value="Investment">Holdings</option><option>Emergency Fund</option><option>Sinking Fund</option><option value="Personal Dev">Personal development</option><option>Allowance</option><option>Transfer</option></select>
       </div>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px">
@@ -858,7 +860,7 @@ canvas{
 
 <!-- ═══ INVESTMENT ═══ -->
 <div class="panel" id="panel-invest">
-  <div class="page-title">Investment</div>
+  <div class="page-title">Holdings</div>
   <div class="page-sub">IHSG condition tracker, AUM management, position tracking, and trading journal.</div>
 
   <!-- IHSG Condition -->
@@ -1082,7 +1084,7 @@ canvas{
         <div class="field"><label>Personal Dev (fixed monthly)</label><input type="number" id="c-dev" class="fi" oninput="saveConfig()"></div>
         <div class="sl">Derived</div>
         <div class="ir"><span class="ik">Allowance</span><span class="iv c-blu" id="c-allow-d">—</span></div>
-        <div class="ir"><span class="ik">Investment</span><span class="iv c-teal" id="c-inv-d">—</span></div>
+        <div class="ir"><span class="ik">Holdings</span><span class="iv c-teal" id="c-inv-d">—</span></div>
         <div class="ir"><span class="ik">Sinking base</span><span class="iv c-amb" id="c-sink-d">—</span></div>
       </div>
       <div class="card mb">

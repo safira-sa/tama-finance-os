@@ -2,223 +2,265 @@
 
 ## Context
 
-Tama OS currently consists of two standalone, production-quality MVPs:
+Tama OS is a local-first AI Financial Operating System. The repository currently contains two mature browser applications plus shared modules:
 
 - `tama-finance.html`: personal finance, ledger, accounts, investment positions, monthly/yearly workflows, bridge export/import, and recovery utilities.
-- `tama-research.html`: research log, universe/watchlist, scorecards, analytics, portfolio bridge import, and recovery utilities.
+- `tama-research.html`: investment research workspace, universe/watchlist, scorecards, analytics, portfolio bridge import, and recovery utilities.
+- `tama-os.html`: unified entry point/dashboard that reads local data and presents decision-oriented output.
+- `js/`: shared modules for storage, state snapshots, deterministic decisioning, AI context, and demo data.
 
-The product direction is to evolve these applications into a single local-first Financial Operating System that helps users decide what to do next, not merely record what happened.
+The product is no longer constrained by Build Week delivery timing. The architecture should therefore optimize for a coherent Tama OS product experience, long-term correctness, maintainability, user trust, and migration safety. This branch can accept larger UI/UX and integration risk when it clearly moves Finance, Research, and OS toward one unified user experience.
 
-## Overall Architecture
+## Product Architecture North Star
 
-Both applications are single-file browser applications built with HTML, CSS, vanilla JavaScript, and Chart.js loaded from CDN. There is no backend, authentication layer, build system, or framework. Each app owns its own DOM, state object, persistence key, rendering functions, event handlers, import/export flow, and patch-style runtime extensions.
+Tama OS should answer:
 
-### Tama Finance OS
+> What should I do next?
 
-Finance uses a global state object named `S`, initialized from `DEF`, with a schema version and a localStorage key of `tama-v8`. The default state contains finance configuration, investment rules, months, transactions, expenses, accounts, positions, and journal entries.
+The durable architecture is a layered local-first system. UI/UX quality is part of the architecture because recommendations only create value when the user can understand and act on them quickly:
 
-Primary modules observed:
+```text
+User Events / Imports
+        ↓
+Local Data Stores
+        ↓
+Canonical Domain State
+        ↓
+Deterministic Decision Engine
+        ↓
+Explainable Recommendation Graph
+        ↓
+AI Copilot Explanation + Scenario Dialogue
+        ↓
+Journal / Action History / Memory
+```
 
-- Account and bucket model.
+Key rule: AI explains and reasons over structured outputs. It does not replace deterministic calculations and does not directly mutate financial state.
+
+## Current Runtime Architecture
+
+The current implementation is still intentionally simple:
+
+- HTML/CSS/vanilla JavaScript.
+- No backend.
+- No authentication.
+- No framework.
+- LocalStorage as the primary persisted store.
+- JSON import/export for portability and recovery.
+- Shared JavaScript modules loaded directly by browser pages.
+
+This remains a valid foundation, but the next architecture phase should introduce clearer boundaries rather than more global patching.
+
+## Application Boundaries
+
+### Finance Workspace
+
+Finance owns the highest-fidelity personal finance data today. It uses a global state object initialized from defaults and persisted under the current Finance localStorage key. It includes:
+
+- Accounts and buckets.
 - Monthly income and expense workflows.
 - Transaction ledger.
-- Monthly and yearly closing.
-- Investment configuration and position management.
-- Journal management.
-- Configuration/settings.
-- JSON backup/restore.
-- Research bridge import/export and contract panels.
-- Restore points and currency recovery utilities.
+- Monthly/yearly closing.
+- Investment configuration and positions.
+- Journal entries.
+- Backup/restore.
+- Bridge import/export.
 
-Finance has a more advanced normalization layer than Research. `normalizeState(raw)` deep-merges legacy or imported data into the current default state, applies schema metadata, initializes arrays/objects, and preserves backward compatibility with older storage keys.
+Finance has the most mature normalization and legacy-key handling, so it should be treated as an important migration source rather than rewritten wholesale.
 
-### Tama Research Desk
+### Research Workspace
 
-Research also uses a global state object named `S`, initialized from `DEF`, with a localStorage key of `tama-research-v1`. The baseline default state contains research entries, universe records, and imported journal data.
+Research owns qualitative and analytical investment context. It includes:
 
-Primary modules observed:
-
-- Research overview.
-- Research log.
-- Research entry modal.
-- Universe/watchlist modal.
-- Technical score calculation.
-- Scorecard analytics.
-- Portfolio/finance bridge import.
+- Research entries.
+- Watchlist/universe records.
+- Scorecards.
+- Imported portfolio context.
 - Research export/import.
-- Patch-style enhancements for market modes, target zones, high-ROI analysis, bridge panels, copy polish, restore points, and currency repair.
+- Restore points.
+- Bridge import/export.
 
-Research started with a simpler `loadState()` and `save()` pair, then later patches wrap those functions to add normalized bridge state and finance import support.
+Research is the source of thesis coverage, watchlist intent, review freshness, conviction, and qualitative risks.
 
-## Data Flow
+### Tama OS Shell
 
-### Finance Data Flow
+The OS shell should become the primary user-facing command center. Its role is to:
 
-1. User edits form fields in the active page or modal.
-2. Save handlers read DOM values directly with `document.getElementById` / `querySelector`.
-3. Handlers mutate `S` directly.
-4. `save()` marks the derived cache dirty, rebuilds/ensures derived data, stamps metadata, and writes `S` to localStorage.
-5. Render functions such as `rDash()`, `rMonthly()`, `rTxn()`, `rInvest()`, and `renderAll()` re-read `S` and update the DOM.
-6. Chart rendering reads derived values and replaces/destroys Chart.js instances through the shared `charts` registry.
-7. Export produces a JSON snapshot of `S`, with later patches wrapping export to emit a bridge envelope and contract metadata.
+- Read Finance and Research data safely.
+- Build canonical snapshots.
+- Run deterministic decision logic.
+- Display Today's Brief and the decision queue.
+- Host the AI copilot.
+- Capture recommendation outcomes.
+- Guide the user back into Finance or Research only when editing is required.
 
-### Research Data Flow
+The shell should avoid directly duplicating complex Finance/Research editing workflows until canonical write paths are ready.
 
-1. User creates or edits a research or universe record via modal DOM fields.
-2. Save handlers read the DOM directly.
-3. Handlers mutate `S.entries`, `S.universe`, `S.journal_import`, or `S.bridge`.
-4. `save()` writes `S` to localStorage.
-5. `renderAll()` refreshes overview, log, universe, and portfolio OS panels.
-6. Technical score calculations are recomputed from form values and stored onto entries when saved.
-7. Bridge imports parse finance envelopes and attach finance data into `S.bridge.finance` and sometimes `S.journal_import`.
+### Unified Product Experience Decision
 
-### Cross-Application Data Flow
+Finance, Research, and OS should feel like one product; fixing the current three-app vibe belongs to Milestone 1. `tama-os.html` should become the primary command center and eventually the preferred entry point for navigating all workflows. `tama-finance.html` and `tama-research.html` may remain separate files during migration, but their UI chrome, navigation, visual language, empty states, and action patterns should be unified so the user experiences Tama OS as one system.
 
-The current integration mechanism is JSON bridge import/export, not live shared storage. Finance can export a finance bridge envelope. Research can import finance bridge data. Research can export research bridge data. Finance can import research bridge data. Each app stores the imported counterpart under its own `S.bridge` namespace.
+Because the time constraint is gone, this branch can take more risk than the original Build Week plan. Acceptable larger changes include shared navigation, shared layout, shared theme tokens, common launch/return controls, and deeper UI cleanup across all three HTML pages. The key is to make the product feel unified without losing local data safety.
 
-This is a practical local-first approach, but it means the two apps do not yet share a single source of truth. They exchange snapshots.
+Constraints for this higher-risk approach:
 
-## State Management
+- `tama-os.html` is the default product entry point.
+- Finance and Research should share the same Tama OS shell language, navigation affordances, and design tokens.
+- Shared UI and domain logic should move into `js/` and `assets/` instead of being duplicated.
+- If Finance/Research remain separate files, they should still feel like first-class OS workspaces, not external apps.
+- If workflows are later embedded into a single runtime, namespace collisions and duplicate DOM IDs must be resolved first.
+- Preserve import/export and recovery paths before changing persisted data.
 
-State management is global, mutable, and DOM-coupled in both applications.
+## Target Domain Modules
 
-### Strengths
+Long-term modules should be browser-native ES modules where possible:
 
-- Simple mental model: one global `S` object per app.
-- Easy JSON backup/restore.
-- No hidden server state.
-- Finance normalization is mature and supports legacy storage keys.
-- Derived caches in Finance reduce repeated expensive calculations.
-- Bridge snapshots preserve local-first portability.
+```text
+js/
+  storage.js          # safe JSON persistence, restore points, export/import helpers
+  state.js            # canonical snapshot and unified state adapters
+  decision-engine.js  # deterministic financial reasoning
+  ai.js               # curated AI context and Responses API integration
+  demo-data.js        # demo/sample data utilities
+  bridge.js           # future bridge contract validation
+  ui.js               # future small shared UI helpers
+  date.js             # future time/freshness helpers
+```
 
-### Weaknesses
+The target is not a framework migration. The target is explicit boundaries around state, deterministic logic, AI context, and UI rendering, plus a unified user experience across all HTML entry points. Larger refactors are acceptable when they make the app feel like one Tama OS product or reduce workspace coupling.
 
-- `S` is mutable from anywhere in the script chain.
-- Many functions both mutate state and render UI.
-- DOM IDs are effectively part of the application API.
-- Later patches monkey-patch global functions such as `renderAll`, `save`, `loadState`, `exportData`, and modal open/save handlers.
-- There is no event bus, state transaction boundary, or centralized action layer.
-- Both apps use the same global names (`S`, `SK`, `charts`, `save`, `loadState`, `renderAll`, `exportData`, `toast`), which will collide if the files are merged naively into one page.
+## Canonical Data Model Direction
 
-## LocalStorage / IndexedDB Usage
+The next durable state contract should be documented before broad migration:
 
-### LocalStorage
+```json
+{
+  "schema": "tama-os-state-v1",
+  "created_at": "ISO_DATE",
+  "updated_at": "ISO_DATE",
+  "profile": {},
+  "finance": {},
+  "research": {},
+  "goals": [],
+  "rules": [],
+  "memory": {},
+  "recommendations": [],
+  "journal": [],
+  "data_quality": []
+}
+```
 
-LocalStorage is the primary persistence layer.
+During transition, the OS can continue producing a read-only snapshot:
 
-Observed keys include:
+```json
+{
+  "schema": "tama-os-snapshot-v1",
+  "generated_at": "ISO_DATE",
+  "finance": {},
+  "research": {},
+  "data_quality": [],
+  "recommendation_inputs": {}
+}
+```
 
-- `tama-v8`: current Finance state.
-- `tama-v7`, `tama-v6`, `tama-v5`, `tama-finance`, `tama-state`: Finance legacy fallback keys.
-- `tama-research-v1`: current Research state.
-- `tama-theme`: Finance theme.
-- `tama-research-theme`: Research theme.
-- `tama-last-export-at`: Finance backup badge timestamp.
-- `tama-finance-restorepoints-v1`: Finance restore points.
-- `tama-research-restorepoints-v1`: Research restore points.
-- `research-p12-chart-mode`: Research chart display preference.
+The snapshot is the safe bridge between legacy app storage and new OS features. The unified state becomes the write source only after migrations are tested and reversible.
 
-### IndexedDB
+## Data Flow Target
 
-No IndexedDB usage was found in the current code. Despite the product direction listing LocalStorage and IndexedDB as storage technologies, the present implementation appears to rely on localStorage plus JSON import/export.
+### Read Flow
 
-## Shared Logic
+1. Read existing local stores defensively.
+2. Normalize into a canonical snapshot.
+3. Attach data-quality warnings.
+4. Run the deterministic decision engine.
+5. Render recommendations, risks, and action queue.
+6. Build curated AI context only from the snapshot and engine output.
 
-The apps independently implement or duplicate several concepts:
+### Write Flow
 
-- Global state object and default state.
-- `loadState()` / `save()` persistence wrappers.
-- `exportData()` / import handlers.
-- Theme initialization and toggling.
-- Toast notifications.
-- DOM helper patterns.
-- Chart.js lifecycle handling.
-- HTML escaping helpers.
-- Date helpers.
-- Currency/bridge freshness helpers in later patches.
-- Restore point management.
-- Bridge contract stamping.
+1. User confirms an action.
+2. Write through a named action/service, not direct global mutation.
+3. Create a restore point before destructive or migratory writes.
+4. Persist to the canonical OS key.
+5. Optionally sync/export legacy-compatible representations while migration is incomplete.
+6. Append journal/action history explaining what changed and why.
 
-These are strong candidates for future shared modules, but they should be extracted incrementally after a baseline contract is frozen.
+## Persistence Strategy
 
-## Duplicate Logic
+### Current
 
-High-value duplicate areas:
+LocalStorage keys remain important compatibility contracts:
 
-1. Persistence and normalization
-   - Both apps serialize a global state object to localStorage.
-   - Both have import/export flows.
-   - Both now need bridge-aware normalization.
+- `tama-v8` for Finance.
+- Finance legacy keys such as `tama-v7`, `tama-v6`, `tama-v5`, `tama-finance`, and `tama-state`.
+- `tama-research-v1` for Research.
+- Theme, restore-point, export timestamp, and chart preference keys.
+- New Tama OS keys for shell-level features where present.
 
-2. UI utilities
-   - Toasts, theme buttons, modal close behavior, DOM setters, HTML escaping, and small formatting helpers are repeated.
+### Target
 
-3. Bridge mechanics
-   - Both apps implement bridge envelope handling, contract stamping, freshness checks, import history, and clear/import flows.
+Use a staged persistence approach:
 
-4. Recovery mechanics
-   - Both apps maintain restore points and local restore/download functions.
+1. Keep LocalStorage for small structured state and backward compatibility.
+2. Add `tama-os-v1` as the canonical OS state after migration tooling exists.
+3. Keep old keys readable and exportable.
+4. Add IndexedDB for larger or append-heavy data when needed: journals, AI conversation history, snapshots, attachments, large research notes, and restore-point archives.
+5. Keep JSON export/import as a non-negotiable local-first recovery path.
 
-5. Render patching
-   - Both apps repeatedly wrap global render functions to add incremental patches.
+## AI Architecture
 
-## Tight Coupling
+The AI copilot should receive a curated context, not a raw dump of all browser storage. Context should include:
 
-The highest coupling is between:
+- User question.
+- Current snapshot summary.
+- Decision-engine output.
+- Data-quality warnings.
+- Relevant goals/rules/memory.
+- Small excerpts or summaries of relevant research theses.
 
-- DOM IDs and business logic.
-- Global `S` shape and render functions.
-- Save handlers and rendering side effects.
-- Bridge schema and UI panels.
-- Patch scripts and exact function names.
+AI responsibilities:
 
-Because many enhancements wrap previously defined functions, script order is part of the architecture. Reordering or bundling scripts without care could break behavior.
+- Explain recommendations.
+- Compare options.
+- Surface assumptions.
+- Ask for missing data.
+- Draft journal notes or action plans for user confirmation.
 
-## Current Strengths
+AI must not:
 
-- Fully local-first and portable.
-- No framework or backend complexity.
-- Mature Finance domain model relative to the current MVP.
-- Research workflow is rich and decision-oriented, not just note-taking.
-- JSON import/export already supports migration toward shared state.
-- Bridge work has begun and aligns with the unified Financial OS vision.
-- Restore-point patches reduce data-loss risk during import/export.
-- Both apps are already useful independently, which provides a stable baseline.
+- Directly write financial state.
+- Invent account balances, prices, or transactions.
+- Override deterministic calculations silently.
+- Hide uncertainty caused by missing or stale data.
 
-## Biggest Architectural Risks When Merging
+## Integration Risks
 
-1. Global namespace collisions
-   - Both files define `S`, `SK`, `charts`, `save`, `loadState`, `renderAll`, `exportData`, `toast`, and many globals.
+1. Global namespace collisions remain a risk if Finance and Research scripts are merged directly.
+2. Existing DOM-coupled handlers make direct reuse difficult.
+3. Patch-layer wrappers make script order an implicit dependency.
+4. Snapshot bridge data can become stale.
+5. LocalStorage quota and synchronous writes may become limiting as journals and AI history grow.
+6. Schema drift can break recommendations if not versioned.
+7. Users can lose trust quickly if migration overwrites local data.
 
-2. Conflicting render lifecycle
-   - Each app assumes it controls `DOMContentLoaded`, page tabs, modals, theme, chart registry, and full render refresh.
+## Architectural Decisions
 
-3. Snapshot bridge versus shared state
-   - The current bridge model exchanges snapshots. A merged OS needs one common financial state or a clearly defined synchronization contract.
+- Make Finance, Research, and OS feel like one cohesive Tama OS experience.
+- Prefer shared shell, navigation, theme tokens, and workspace contracts before forcing a single runtime.
+- A single-runtime or embedded-workspace direction is acceptable later if namespace collisions, duplicate DOM IDs, and migration safety are handled explicitly.
+- Larger structural changes are allowed when they improve UX coherence, remove patching, duplication, or global coupling without sacrificing data safety.
+- Extract deterministic logic before expanding AI behavior.
+- Treat every recommendation as explainable, attributable, journalable, and easy to act on from the UI.
+- Introduce IndexedDB only for clear data-volume or durability needs.
+- Avoid framework migration unless UI complexity creates sustained product drag.
+- Maintain JSON import/export even after unified storage exists.
 
-4. Script-order dependency
-   - Later patches rely on wrapping earlier functions. Combining or modularizing without preserving order could silently disable behavior.
+## Next Architecture Milestones
 
-5. Schema drift
-   - Finance has schema versioning; Research has incremental normalization patches. A unified app will need explicit schema contracts for finance, research, bridge, memory, and decision-engine data.
-
-6. DOM ID collisions
-   - A merged single page may contain duplicate IDs, duplicate modal IDs, duplicate buttons, duplicate chart IDs, and duplicate theme controls unless namespaced.
-
-7. LocalStorage migration risk
-   - Users may already have data under separate keys. A unified key must migrate without overwriting or losing existing Finance or Research data.
-
-8. Decision-engine coupling risk
-   - If deterministic recommendations are built directly into UI render functions, the future GPT copilot will lack clean structured data to reason over.
-
-## Architectural Direction
-
-For Milestone 1, the safest direction is not a rewrite. The recommended path is an incremental shell around existing apps:
-
-1. Preserve both apps' state keys and behavior initially.
-2. Define a canonical shared state contract separately from both app internals.
-3. Move only low-risk shared utilities first: storage wrappers, escaping, dates, toasts, theme, and bridge validation.
-4. Keep Finance and Research as modules with namespaced APIs.
-5. Introduce a read-only unified dashboard/brief before attempting write-path consolidation.
-6. Only after the bridge contract is stable, migrate toward a single shared storage key.
-
+1. Freeze and document the canonical state contract.
+2. Add namespaced APIs for Finance, Research, Storage, Bridge, Decision Engine, and AI.
+3. Replace monkey-patch extension behavior with explicit lifecycle hooks.
+4. Move high-value calculations into pure functions with tests.
+5. Introduce reversible migration to `tama-os-v1`.
+6. Add action journaling as the first canonical write path.
+7. Add IndexedDB for append-heavy history after LocalStorage limits become real.

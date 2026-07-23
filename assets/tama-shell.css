@@ -1,18 +1,18 @@
-/* Shared visual shell for the Build Week Tama OS decision workflow.
-   Keep this file small: it aligns the three standalone pages without merging runtimes. */
+/* Tama OS shared shell styles.
+   Goal: simple, coherent navigation across OS, Money, and Research without merging runtimes. */
+
 .tama-shell-strip {
   width: min(1180px, calc(100% - 32px));
   margin: 14px auto 0;
-  padding: 10px;
+  padding: 10px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   border: 1px solid var(--bm, var(--line, rgba(255,255,255,.10)));
-  border-radius: 20px;
-  background: linear-gradient(135deg, rgba(18,181,163,.10), rgba(144,102,232,.10)), var(--surf, var(--panel, rgba(18,25,34,.82)));
+  border-radius: 18px;
+  background: var(--surf, var(--panel, rgba(18,25,34,.92)));
   color: var(--t, var(--text, #f4f7fb));
-  box-shadow: 0 14px 34px rgba(0,0,0,.14);
 }
 
 .tama-shell-strip.is-inset {
@@ -38,41 +38,52 @@
   margin: 0;
   color: var(--t2, var(--muted, #93a4b8));
   font-size: 12px;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 .tama-shell-map {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
-.tama-shell-pill {
+.tama-shell-pill,
+.tama-shell-next {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-height: 32px;
   padding: 6px 11px;
   border: 1px solid var(--bm, var(--line, rgba(255,255,255,.10)));
-  border-radius: 999px;
+  border-radius: 12px;
   background: var(--surf2, rgba(255,255,255,.05));
   color: var(--t2, var(--muted, #93a4b8));
   font-size: 11.5px;
   font-weight: 800;
   text-decoration: none;
   white-space: nowrap;
+  transition: background .16s ease, border-color .16s ease, color .16s ease;
 }
 
 .tama-shell-pill:hover,
-.tama-shell-pill:focus-visible {
+.tama-shell-pill:focus-visible,
+.tama-shell-next:hover,
+.tama-shell-next:focus-visible {
   border-color: var(--teal, #12b5a3);
   color: var(--t, var(--text, #f4f7fb));
   outline: none;
 }
 
-.tama-shell-pill.is-active {
+.tama-shell-pill.is-active,
+.tama-shell-pill[aria-current="page"] {
+  border-color: var(--teal, #12b5a3);
+  background: var(--teal-b, rgba(18,181,163,.14));
+  color: var(--teal, #12b5a3);
+}
+
+.tama-shell-next {
   border-color: transparent;
   background: var(--teal, #12b5a3);
   color: #041311;
@@ -83,8 +94,186 @@
   font-size: 12px;
 }
 
+.tama-shell-system-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--t, var(--text, #f4f7fb));
+}
+
+.tama-shell-system-label::before {
+  content: "Tama OS";
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 1px 7px;
+  border: 1px solid var(--bm, var(--line, rgba(255,255,255,.10)));
+  border-radius: 999px;
+  background: var(--teal-b, rgba(18,181,163,.14));
+  color: var(--teal, #12b5a3);
+  font-family: var(--mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .04em;
+}
+
+/* Workspace-only normalization: make Money and Research share one quiet Tama OS palette. */
+[data-theme="dark"] body.tama-workspace-page {
+  --bg: #0b0f14;
+  --surf: #121922;
+  --surf2: #19232f;
+  --surf3: #21303f;
+  --b: rgba(255,255,255,.08);
+  --bm: rgba(255,255,255,.12);
+  --bs: rgba(255,255,255,.20);
+  --t: #f4f7fb;
+  --t2: #93a4b8;
+  --t3: #617084;
+  --teal: #12b5a3;
+  --teal-b: rgba(18,181,163,.14);
+  --pur: #12b5a3;
+  --pur-b: rgba(18,181,163,.14);
+}
+
+[data-theme="light"] body.tama-workspace-page {
+  --bg: #f7f9fc;
+  --surf: #ffffff;
+  --surf2: #f1f5f9;
+  --surf3: #e2e8f0;
+  --b: rgba(15,23,42,.08);
+  --bm: rgba(15,23,42,.12);
+  --bs: rgba(15,23,42,.20);
+  --t: #0f172a;
+  --t2: #475569;
+  --t3: #8290a3;
+  --teal: #0f9f90;
+  --teal-b: rgba(15,159,144,.12);
+  --pur: #0f9f90;
+  --pur-b: rgba(15,159,144,.12);
+}
+
+body.tama-workspace-page {
+  background: var(--bg, #0b0f14);
+}
+
+body.tama-workspace-page .app {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+}
+
+body.tama-workspace-page .topbar {
+  top: 12px;
+  margin-top: 12px;
+  min-height: 56px;
+  padding: 0 14px;
+  border: 1px solid var(--bm, rgba(255,255,255,.12));
+  border-radius: 18px;
+  background: var(--surf, #121922);
+  box-shadow: none;
+}
+
+body.tama-workspace-page .logo-dot {
+  background: var(--teal, #12b5a3) !important;
+}
+
+body.tama-workspace-page .content {
+  width: 100%;
+  max-width: none;
+  padding-inline: 0;
+}
+
+body.tama-workspace-page .card,
+body.tama-workspace-page .met,
+body.tama-workspace-page .acc-card,
+body.tama-workspace-page .research-card,
+body.tama-workspace-page .pattern-card,
+body.tama-workspace-page .modal,
+body.tama-workspace-page .import-zone {
+  border-color: var(--b, rgba(255,255,255,.08));
+  background: var(--surf, #121922);
+  box-shadow: none;
+}
+
+body.tama-workspace-page .card-sm,
+body.tama-workspace-page .quality-pill,
+body.tama-workspace-page .mini-ledger,
+body.tama-workspace-page .timeline-item,
+body.tama-workspace-page .queue-item {
+  border-color: var(--b, rgba(255,255,255,.08));
+  background: var(--surf2, #19232f);
+}
+
+body.tama-workspace-page .page-title {
+  letter-spacing: -.03em;
+}
+
+body.tama-workspace-page .page-sub {
+  max-width: 760px;
+  line-height: 1.55;
+}
+
+body.tama-workspace-page .tab-btn,
+body.tama-workspace-page .btn,
+body.tama-workspace-page .theme-btn,
+body.tama-workspace-page .os-link,
+body.tama-workspace-page .secondary-actions summary {
+  border-radius: 12px;
+}
+
+body.tama-workspace-page .os-link,
+body.tama-workspace-page .theme-btn,
+body.tama-workspace-page .secondary-actions summary,
+body.tama-workspace-page .topbar-r .btn {
+  min-height: 32px;
+  padding: 6px 10px;
+  border: 1px solid var(--bm, rgba(255,255,255,.12));
+  background: var(--surf2, #19232f);
+  color: var(--t2, #93a4b8);
+  font-size: 11.5px;
+  font-weight: 800;
+}
+
+body.tama-workspace-page .os-link:hover,
+body.tama-workspace-page .theme-btn:hover,
+body.tama-workspace-page .secondary-actions summary:hover,
+body.tama-workspace-page .topbar-r .btn:hover {
+  border-color: var(--teal, #12b5a3);
+  color: var(--t, #f4f7fb);
+}
+
+body.tama-workspace-page .tab-btn.active {
+  border-bottom-color: var(--teal, #12b5a3);
+}
+
+body.tama-workspace-page .btn-primary,
+body.tama-workspace-page .btn-teal {
+  border-color: var(--teal, #12b5a3);
+  background: var(--teal, #12b5a3);
+  color: #041311;
+}
+
+body.tama-workspace-page .badge.b-pur,
+body.tama-workspace-page .a-pur,
+body.tama-workspace-page .tier2,
+body.tama-workspace-page .word-chip.high {
+  background: var(--teal-b, rgba(18,181,163,.14));
+  color: var(--teal, #12b5a3);
+  border-color: rgba(18,181,163,.24);
+}
+
+body.tama-workspace-page .fi:focus,
+body.tama-workspace-page .ta:focus {
+  border-color: var(--teal, #12b5a3) !important;
+  box-shadow: 0 0 0 3px rgba(18,181,163,.10);
+}
+
+body.tama-workspace-page .import-zone:hover {
+  border-color: var(--teal, #12b5a3) !important;
+}
+
 @media (max-width: 760px) {
-  .tama-shell-strip {
+  .tama-shell-strip,
+  body.tama-workspace-page .topbar {
     align-items: flex-start;
     flex-direction: column;
   }
@@ -92,4 +281,166 @@
   .tama-shell-map {
     justify-content: flex-start;
   }
+
+  .tama-shell-map .tama-shell-next {
+    width: 100%;
+  }
+
+  body.tama-workspace-page .app {
+    width: min(100% - 20px, 1180px);
+  }
+}
+
+/* UI critique follow-up: split product nav from local workflow tabs. */
+body.tama-workspace-page .topbar {
+  flex-wrap: wrap;
+  row-gap: 0;
+}
+
+body.tama-workspace-page .logo,
+body.tama-workspace-page .topbar-r {
+  min-height: 54px;
+}
+
+body.tama-workspace-page .tabs {
+  order: 3;
+  flex: 0 0 100%;
+  margin: 0 -4px;
+  padding: 0 0 6px;
+  border-top: 1px solid var(--b, rgba(255,255,255,.08));
+}
+
+body.tama-workspace-page .tab-btn {
+  min-height: 38px;
+  padding: 9px 11px;
+  border-bottom-width: 2px;
+  color: var(--t2, #93a4b8);
+}
+
+body.tama-workspace-page .tab-btn.active {
+  color: var(--t, #f4f7fb);
+}
+
+body.tama-workspace-page .topbar-r {
+  margin-left: auto;
+}
+
+@media (max-width: 900px) {
+  body.tama-workspace-page .tabs {
+    padding-top: 2px;
+    overflow-x: auto;
+  }
+}
+
+/* Micro-polish: consistent spacing, type rhythm, and calmer reading density. */
+body.tama-workspace-page {
+  text-rendering: optimizeLegibility;
+}
+
+body.tama-workspace-page .topbar {
+  column-gap: 12px;
+}
+
+body.tama-workspace-page .tabs {
+  gap: 2px;
+}
+
+body.tama-workspace-page .tab-btn {
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: .01em;
+}
+
+body.tama-workspace-page .tab-btn.active {
+  font-weight: 750;
+}
+
+body.tama-workspace-page .btn,
+body.tama-workspace-page .theme-btn,
+body.tama-workspace-page .os-link,
+body.tama-workspace-page .tama-shell-pill,
+body.tama-workspace-page .tama-shell-next,
+body.tama-workspace-page .secondary-actions summary {
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+body.tama-workspace-page .logo {
+  font-size: 14px;
+  letter-spacing: -.01em;
+}
+
+body.tama-workspace-page .tama-shell-system-label::before,
+body.tama-workspace-page .tama-shell-eyebrow,
+body.tama-workspace-page .ct,
+body.tama-workspace-page .sl {
+  letter-spacing: .08em;
+}
+
+body.tama-workspace-page .tama-shell-eyebrow,
+body.tama-workspace-page .ct,
+body.tama-workspace-page .sl {
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+body.tama-workspace-page .page-title {
+  margin-bottom: 5px;
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+body.tama-workspace-page .page-sub,
+body.tama-workspace-page .tama-shell-meta p,
+body.tama-workspace-page .decision-loop-copy,
+body.tama-workspace-page .hint,
+body.tama-workspace-page .ms,
+body.tama-workspace-page .ik {
+  line-height: 1.6;
+}
+
+body.tama-workspace-page .card {
+  padding: 18px;
+}
+
+body.tama-workspace-page .card-sm,
+body.tama-workspace-page .met,
+body.tama-workspace-page .quality-pill {
+  padding: 13px 14px;
+}
+
+body.tama-workspace-page .alert,
+body.tama-workspace-page .decision-loop,
+body.tama-workspace-page .queue-item,
+body.tama-workspace-page .timeline-item {
+  line-height: 1.55;
+}
+
+body.tama-workspace-page .badge,
+body.tama-workspace-page .tag,
+body.tama-workspace-page .topbar-badge {
+  font-size: 10.5px;
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+body.tama-workspace-page .fi,
+body.tama-workspace-page .ta {
+  min-height: 34px;
+  font-size: 12.5px;
+  line-height: 1.35;
+}
+
+body.tama-workspace-page .tbl th {
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: .06em;
+}
+
+body.tama-workspace-page .tbl td {
+  line-height: 1.5;
 }

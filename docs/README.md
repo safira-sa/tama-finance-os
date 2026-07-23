@@ -11,6 +11,8 @@ This folder keeps planning and review documents out of the runnable app root whi
 - [`implementation-plan.md`](implementation-plan.md) — Build Week implementation sequence.
 - [`technical-debt.md`](technical-debt.md) — known debt and risk areas.
 - [`decision-engine.md`](decision-engine.md) — deterministic engine scope and non-goals.
+- [`high-roi-audit.md`](high-roi-audit.md) — high-ROI product, automation, risk, and bug audit for Finance, Research, and Tama OS.
+- [`ui-ux-critique.md`](ui-ux-critique.md) — objective UI/UX critique and simplification direction.
 
 ## Submission support
 

@@ -638,17 +638,17 @@ canvas{
 </style>
 
 </head>
-<body>
+<body class="tama-workspace-page">
 <div class="app">
 <div class="topbar">
-  <div class="logo"><span class="logo-dot"></span>Research Workspace</div>
+  <div class="logo"><span class="logo-dot"></span><span class="tama-shell-system-label">Research Workspace</span></div>
   <div class="tabs">
-    <button class="tab-btn active" onclick="sw('overview',this)">Overview</button>
-    <button class="tab-btn" onclick="sw('portfolio',this)">Portfolio Lens</button>
-    <button class="tab-btn" onclick="sw('log',this)">Research Log</button>
-    <button class="tab-btn" onclick="sw('universe',this)">Universe</button>
+    <button class="tab-btn active" onclick="sw('overview',this)">Today</button>
+    <button class="tab-btn" onclick="sw('portfolio',this)">Review Holdings</button>
+    <button class="tab-btn" onclick="sw('log',this)">Thesis Log</button>
+    <button class="tab-btn" onclick="sw('universe',this)">Watchlist</button>
     <button class="tab-btn" onclick="sw('analytics',this)">Trade Journal</button>
-    <button class="tab-btn" onclick="sw('patterns',this)">Pattern Notes</button>
+    <button class="tab-btn" onclick="sw('patterns',this)">Notes</button>
   </div>
   <div class="topbar-r">
     <a class="os-link" href="tama-os.html" title="Return to the Tama OS Decision Hub">Decision Hub</a>
@@ -667,25 +667,27 @@ canvas{
 <section class="tama-shell-strip" aria-label="Research Workspace map">
   <div class="tama-shell-meta">
     <span class="tama-shell-eyebrow">Research Workspace</span>
-    <p>Fix thesis coverage and evidence quality before accepting portfolio risk.</p>
+    <p>Capture minimum thesis facts; Tama OS will turn gaps and stale coverage into action.</p>
   </div>
   <nav class="tama-shell-map" aria-label="Workspace switcher">
     <a class="tama-shell-pill" href="tama-os.html">Decision Hub</a>
     <span class="tama-shell-arrow">→</span>
     <a class="tama-shell-pill" href="tama-finance.html">Money Workspace</a>
     <span class="tama-shell-arrow">→</span>
-    <a class="tama-shell-pill is-active" href="tama-research.html">Research Workspace</a>
+    <a class="tama-shell-pill is-active" aria-current="page" href="tama-research.html">Research Workspace</a>
+    <a class="tama-shell-next" href="tama-os.html#dashboard">Next: Review Brief</a>
   </nav>
 </section>
+
 
 <div class="content">
 
 <!-- ═══ OVERVIEW ═══ -->
 <div class="panel active" id="panel-overview">
-  <div class="page-title">Overview</div>
+  <div class="page-title">Today</div>
   <div class="page-sub" id="ov-date">—</div>
   <div class="alert a-pur decision-loop" aria-label="Research decision-loop guidance">
-    <div class="decision-loop-copy"><strong>Decision loop</strong>Keep thesis quality here. Then review Today’s Brief to check whether Money Workspace holdings are decision-ready, or update actual cash and positions in Money Workspace.</div>
+    <div class="decision-loop-copy"><strong>Decision loop</strong>Keep thesis quality here with the minimum evidence needed, then let Tama OS verify whether Money Workspace holdings are decision-ready and turn gaps into next actions.</div>
     <div class="decision-loop-actions" aria-label="Research decision-loop actions"><a href="tama-os.html">Review Brief</a><a href="tama-finance.html">Update Money Data</a></div>
   </div>
   <div class="g4 mb">
@@ -766,7 +768,7 @@ canvas{
 <div class="panel" id="panel-log">
   <div class="panel-hdr-clean">
     <div>
-      <div class="page-title">Research Log</div>
+      <div class="page-title">Thesis Log</div>
       <div class="page-sub" style="margin-bottom:0">Pre-trade thesis builder. Auto-expires after 30 days and flags two days before expiry.</div>
     </div>
     <button class="btn btn-primary" onclick="openResearchModal(null)">+ New entry</button>
@@ -938,7 +940,7 @@ canvas{
 
 <!-- ═══ PATTERN ATLAS ═══ -->
 <div class="panel" id="panel-patterns">
-  <div class="page-title">Pattern Notes</div>
+  <div class="page-title">Notes</div>
   <div class="page-sub">A practical reference for patterns, moving averages, momentum, and scoring.</div>
   <div class="g3 mb">
     <!-- Bullish Patterns -->
